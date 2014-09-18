@@ -8,14 +8,14 @@ module BambooUser
       if request.post?
         if (user = User.find_by_username(params[:user][:username]))
           session[:user] = user
-          redirect_to main_app.root_path
+          redirect_to eval(BambooUser.after_login_path)
         end
       end
     end
 
     def logout
       session[:user] = nil
-      redirect_to main_app.root_path
+      redirect_to eval(BambooUser.after_logout_path)
     end
   end
 end
