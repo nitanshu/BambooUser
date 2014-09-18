@@ -7,7 +7,7 @@ module BambooUser
     def login
       if request.post?
         if (user = User.find_by_username(params[:user][:username]))
-          session[:user] = user
+          session[:user] = user.id
           redirect_to eval(BambooUser.after_login_path)
         end
       end
