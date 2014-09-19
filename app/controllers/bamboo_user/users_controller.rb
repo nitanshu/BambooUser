@@ -43,6 +43,7 @@ module BambooUser
     end
 
     # DELETE /users/1
+    #TODO: If current user is destroyed then session should be invalidated too
     def destroy
       @user.destroy
       redirect_to users_url, notice: 'User was successfully destroyed.'
