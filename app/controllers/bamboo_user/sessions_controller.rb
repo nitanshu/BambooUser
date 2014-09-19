@@ -6,7 +6,7 @@ module BambooUser
 
     def login
       if request.post?
-        if (user = User.find_by_username(params[:user][:username]))
+        if (user = User.find_by(username: params[:user][:username]).try(:authenticate, params[:user][:password]))
           session[:user] = user.id
           redirect_to eval(BambooUser.after_login_path)
         end
