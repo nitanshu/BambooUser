@@ -8,14 +8,14 @@ module BambooUser
       if request.post?
         if (user = User.find_by(username: params[:user][:username]).try(:authenticate, params[:user][:password]))
           session[:user] = user.id
-          redirect_to eval(BambooUser.after_login_path) and return
+          redirect_to (session[:previous_url] || eval(BambooUser.after_login_path)) and return
         end
       end
       render layout: BambooUser.login_screen_layout
     end
 
     def logout
-      session[:user] = nil
+      session.clear
       redirect_to eval(BambooUser.after_logout_path)
     end
   end

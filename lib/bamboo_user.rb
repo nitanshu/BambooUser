@@ -12,7 +12,7 @@ module BambooUser
   @@after_logout_path = 'main_app.root_path'
   @@login_screen_layout = 'application'
   @@all_actions = '*'
-  #@@public_paths = {controller_name_1: [all_actions], controller_name_2: [:action_1, :action_2, :action_3]}
+  @@public_paths = {controller_name_1: [all_actions], controller_name_2: [:action_1, :action_2, :action_3]}
   #@@public_paths = {home: [all_actions], controller_name_2: [:action_1, :action_2, :action_3]}
-  @@public_paths = {controller_name_1: [all_actions], home: [:welcome]}
+  #@@public_paths = {controller_name_1: [all_actions], home: [:welcome]}
 end

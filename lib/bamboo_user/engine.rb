@@ -32,9 +32,27 @@ module BambooUser
           end
           _restrict_access
         end
+
+        # Stores last url visited which is needed for post login redirect
+        def store_location
+          return if request.xhr? or (not request.get?)
+
+          if request.format == "text/html" or request.content_type == "text/html"
+            #request.path != "/users/sign_in" &&
+            #request.path != "/users/sign_up" &&
+            #request.path != "/users/password/new" &&
+            #request.path != "/users/password/edit" &&
+            #request.path != "/users/confirmation" &&
+            #request.path != "/users/sign_out"
+            session[:previous_url] = request.fullpath unless [bamboo_user.login_path,
+                                                              bamboo_user.logout_path].include?(request.path)
+          end
+
+        end
       end
 
       ActionController::Base.send :helper_method, :logged_user
+      ActionController::Base.send :before_filter, :store_location
       ActionController::Base.send :before_filter, :fetch_current_user
     end
   end
