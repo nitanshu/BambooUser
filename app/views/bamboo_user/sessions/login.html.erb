@@ -2,5 +2,7 @@ This is a login screen
 <%= form_for :user, url: login_path do |f| %>
     <%= f.text_field :username %>
     <%= f.password_field :password %>
+    <%= check_box_tag :remember_me, 1, true %>
+    <%= label_tag :remember_me, 'Keep me signed in' %>
     <%= f.submit 'login' %>
 <% end %>

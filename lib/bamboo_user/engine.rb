@@ -8,7 +8,9 @@ module BambooUser
       ActionController::Base.class_eval do
 
         def logged_user
-          @logged_user ||= BambooUser::User.find_by_id(session[:user])
+          @logged_user ||= BambooUser::User.find_by(auth_token: cookies[:auth_token_p]) if cookies[:auth_token_p]
+          @logged_user ||= BambooUser::User.find_by(id: session[:user])
+          @logged_user
         end
 
         def logged_in?
