@@ -14,12 +14,11 @@ module BambooUser
 
     belongs_to(BambooUser.owner_class_name.to_s.underscore.to_sym, foreign_key: 'owner_id') if BambooUser.owner_available?
 
-    def perform_reset_password!(send_email = true)
-      if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
-        execute_in_thread_in_production do
-          UserMailer.password_reset_request_email(self).deliver
-        end
-      end
+    def perform_reset_password!
+      BambooUser.after_password_reset_request_callback({
+                                                     user: self,
+                                                     password_reset_link: BambooUser::Engine.routes.url_helpers.validate_password_reset_path(encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"))
+                                                 }) if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
     end
 
     private

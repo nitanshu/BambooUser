@@ -9,6 +9,24 @@ module BambooUser
         (owner_class_name.constantize.reflections[owner_class_reverse_association.to_sym].try(:class_name) == 'BambooUser::User')
   end
 
+  def self.welcome_on_registration_success_email(options)
+    puts 'This is a stub. Suggestion: Please re-define it to send welcome email.'
+    puts "options: #{options.inspect}"
+    options
+  end
+
+  def self.after_password_reset_request_callback(options)
+    puts 'This is a stub. Suggestion: Please re-define it to send password reset link email.'
+    puts "options: #{options.inspect}"
+    options
+  end
+
+  def self.after_password_reset_confirmed_callback(options)
+    puts 'This is a stub. Suggestion: Please re-define it to send password changed confirmation email.'
+    puts "options: #{options.inspect}"
+    options
+  end
+
   mattr_accessor :owner_class_name
   @@owner_class_name = nil
 
