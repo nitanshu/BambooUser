@@ -7,7 +7,7 @@ module BambooUser
 
     def login
       if request.post?
-        if (user = @model.find_by(username: params[:user][:username]).try(:authenticate, params[:user][:password]))
+        if (user = @model.find_by(email: params[:user][:email]).try(:authenticate, params[:user][:password]))
           session[:user] = user.id
           cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
           redirect_to (session[:previous_url] || eval(BambooUser.after_login_path)) and return
@@ -54,11 +54,6 @@ module BambooUser
       session.clear
       cookies.delete(:auth_token_p)
       redirect_to eval(BambooUser.after_logout_path)
-    end
-
-    private
-    def fetch_model_reflection
-      @model = BambooUser.owner_available? ? root_owner_reflection : User
     end
   end
 end

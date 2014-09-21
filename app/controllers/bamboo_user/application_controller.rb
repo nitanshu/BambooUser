@@ -26,5 +26,9 @@ module BambooUser
       end
     end
 
+    def fetch_model_reflection
+      @model = BambooUser.owner_available? ? root_owner_reflection : User
+    end
+
   end
 end

@@ -5,11 +5,11 @@ module BambooUser
 
     has_secure_password
 
-    before_validation :strip_username
+    before_validation :strip_email
     before_create :generate_auth_token
 
     if false
-      validates :username, length: 2..5
+      validates :email, length: 2..5
     end
 
     belongs_to(BambooUser.owner_class_name.to_s.underscore.to_sym, foreign_key: 'owner_id') if BambooUser.owner_available?
@@ -23,8 +23,8 @@ module BambooUser
     end
 
     private
-    def strip_username
-      self.username = self.username.to_s.downcase.strip if self.username
+    def strip_email
+      self.email = self.email.to_s.downcase.strip if self.email
     end
 
     def generate_auth_token

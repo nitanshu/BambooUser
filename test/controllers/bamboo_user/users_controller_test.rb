@@ -19,7 +19,7 @@ module BambooUser
 
     test "should create user" do
       assert_difference('User.count') do
-        post :create, user: { password: @user.password, username: @user.username }
+        post :create, user: { password: @user.password, email: @user.email }
       end
 
       assert_redirected_to user_path(assigns(:user))
@@ -36,7 +36,7 @@ module BambooUser
     end
 
     test "should update user" do
-      patch :update, id: @user, user: { password: @user.password, username: @user.username }
+      patch :update, id: @user, user: { password: @user.password, email: @user.email }
       assert_redirected_to user_path(assigns(:user))
     end
 
