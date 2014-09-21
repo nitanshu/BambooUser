@@ -2,11 +2,12 @@ require_dependency "bamboo_user/application_controller"
 
 module BambooUser
   class SessionsController < ApplicationController
-    skip_before_filter :fetch_current_user, only: [:login]
+    skip_before_filter :fetch_logged_user, only: [:login, :reset_password]
+    before_filter :fetch_model_reflection
 
     def login
       if request.post?
-        if (user = User.find_by(username: params[:user][:username]).try(:authenticate, params[:user][:password]))
+        if (user = @model.find_by(username: params[:user][:username]).try(:authenticate, params[:user][:password]))
           session[:user] = user.id
           cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
           redirect_to (session[:previous_url] || eval(BambooUser.after_login_path)) and return
@@ -15,10 +16,49 @@ module BambooUser
       render layout: BambooUser.login_screen_layout
     end
 
+    def reset_password
+      if request.post?
+        @user = @model.find_by(email: params[:user][:email])
+        #if (@user and (not @user.invited?) and @user.account == @root_account)
+        if (@user)
+          @user.perform_reset_password!
+          redirect_to(login_path, notice: 'An email with password reset link has been sent to registered email address. Please check') and return
+        else
+          flash[:notice] = "No registered user found with email '#{params[:user][:email]}'."
+        end
+      end
+      @user ||= @model.new
+    end
+
+    def validate_password_reset
+      _password_reset_token, @_email = Base64.urlsafe_decode64(params[:encoded_params]).try(:split, '||')
+      @user = @model.find_by_email(@_email)
+      if (@user and (not @user.invited?) and @user.account == @root_account and
+          @user.password_reset_token == _password_reset_token and ((Time.now - @user.password_reset_sent_at) <= 86400.0)) #reset-token shouldn't be more than 1 day(i.e 86400 seconds) old
+        if request.post?
+          if ((not params[:user][:password].blank?)) and
+              (@user.update(password: params[:user][:password], password_confirmation: params[:user][:password_confirmation],
+                            password_reset_token: nil, password_reset_sent_at: nil))
+            redirect_to(login_sessions_path, notice: 'New password created successfully. Please login with updated credentials here.') and return
+          else
+            logger.debug(@user.errors.inspect)
+            flash[:notice] = 'Failed to update. Please recheck the password'
+          end
+        end
+      else
+        redirect_to(login_path, notice: 'Invalid password reset token in use or it is too old to be used.') and return
+      end
+    end
+
     def logout
       session.clear
       cookies.delete(:auth_token_p)
       redirect_to eval(BambooUser.after_logout_path)
+    end
+
+    private
+    def fetch_model_reflection
+      @model = BambooUser.owner_available? ? root_owner_reflection : User
     end
   end
 end

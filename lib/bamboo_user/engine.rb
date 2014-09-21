@@ -17,7 +17,7 @@ module BambooUser
           (not logged_user.nil?)
         end
 
-        def fetch_current_user
+        def fetch_logged_user
           redirect_to(bamboo_user.login_path, notice: 'Login is required. Please login here') unless logged_in? if restrict_access?
         end
 
@@ -47,7 +47,8 @@ module BambooUser
             #request.path != "/users/confirmation" &&
             #request.path != "/users/sign_out"
             session[:previous_url] = request.fullpath unless [bamboo_user.login_path,
-                                                              bamboo_user.logout_path].include?(request.path)
+                                                              bamboo_user.logout_path,
+                                                              bamboo_user.reset_password_path].include?(request.path)
           end
 
         end
@@ -55,7 +56,7 @@ module BambooUser
 
       ActionController::Base.send :helper_method, :logged_user
       ActionController::Base.send :before_filter, :store_location
-      ActionController::Base.send :before_filter, :fetch_current_user
+      ActionController::Base.send :before_filter, :fetch_logged_user
     end
   end
 
