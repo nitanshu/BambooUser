@@ -20,7 +20,7 @@ module BambooUser
       if request.post?
         @user = @model.find_by(email: params[:user][:email])
         if (@user)
-          @user.perform_reset_password!
+          @user.request_reset_password!
           redirect_to(login_path, notice: 'An email with password reset link has been sent to registered email address. Please check') and return
         else
           flash[:notice] = "No registered user found with email '#{params[:user][:email]}'."
@@ -34,13 +34,8 @@ module BambooUser
       @user = @model.find_by(email: @_email)
       if request.post?
         if (@user and @user.password_reset_token == _password_reset_token and ((Time.now - @user.password_reset_sent_at) <= 86400.0)) #reset-token shouldn't be more than 1 day(i.e 86400 seconds) old
-          if ((not params[:user][:password].blank?)) and
-              if @user.update(password: params[:user][:password],
-                              password_confirmation: params[:user][:password_confirmation],
-                              password_reset_token: nil, password_reset_sent_at: nil)
-                session[:previous_url] = nil #Otherwise it may re-take back to reset_password page wrongly, as its pat can't be blacklisted in 'hard-coded' way in engine.rb
-                BambooUser.after_password_reset_confirmed_callback(@user)
-              end
+          if (not params[:user][:password].blank?) and @user.perform_reset_password!(user_params)
+            session[:previous_url] = nil #Otherwise it may re-take back to reset_password page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
             redirect_to(login_path, notice: 'New password created successfully. Please login with updated credentials here.') and return
           else
             logger.debug(@user.errors.inspect)
@@ -56,6 +51,11 @@ module BambooUser
       session.clear
       cookies.delete(:auth_token_p)
       redirect_to eval(BambooUser.after_logout_path)
+    end
+
+    private
+    def user_params
+      params.require(:user).permit(:email, :password, :password_confirmation)
     end
   end
 end
