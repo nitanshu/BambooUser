@@ -9,6 +9,10 @@ module BambooUser
         (owner_class_name.constantize.reflections[owner_class_reverse_association.to_sym].try(:class_name) == 'BambooUser::User')
   end
 
+  def self.details_class_available?
+    (not details_class_name.nil?) and (details_class_name.constantize rescue false)
+  end
+
   def self.welcome_on_registration_success_email(options)
     puts 'This is a stub. Suggestion: Please re-define it to send welcome email.'
     puts "options: #{options.inspect}"
@@ -26,6 +30,15 @@ module BambooUser
     puts "options: #{options.inspect}"
     options
   end
+
+  mattr_accessor :details_class_name
+  @@details_class_name = nil
+
+  mattr_accessor :detail_attributes_to_delegate
+  @@detail_attributes_to_delegate = []
+
+  mattr_accessor :detail_attributes_to_not_delegate
+  @@detail_attributes_to_not_delegate = %w(id user_id created_at updated_at)
 
   mattr_accessor :owner_class_name
   @@owner_class_name = nil
