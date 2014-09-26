@@ -1,3 +1,5 @@
+require 'serialized_attr_accessors'
+
 module BambooUser
   class Engine < ::Rails::Engine
     isolate_namespace BambooUser

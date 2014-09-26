@@ -1,10 +1,23 @@
 module BambooUser
   class User < ActiveRecord::Base
 
+    #---Attributes declarations-------------------------------------
     attr_accessor :temp_owner_id
 
+    #---For authentication from bcrypt-ruby-------------------------
     has_secure_password
 
+    #---Associations------------------------------------------------
+    has_one :user_detail, dependent: :destroy
+
+    #---Validations ------------------------------------------------
+    validates :email, format: {with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i}, uniqueness: true
+
+    #---Nested-Attributes-------------------------------------------
+    accepts_nested_attributes_for :user_detail
+
+    #---Callbacks --------------------------------------------------
+    after_initialize :provision_user_detail
     before_validation :strip_email
     before_create :generate_auth_token
 
@@ -31,6 +44,13 @@ module BambooUser
     end
 
     private
+    def provision_user_detail
+      if user_detail.nil?
+        build_user_detail
+        user_detail.user = self
+      end
+    end
+
     def strip_email
       self.email = self.email.to_s.downcase.strip if self.email
     end

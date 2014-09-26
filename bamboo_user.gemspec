@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.1.1"
   s.add_dependency 'bcrypt', '~> 3.1.7' # Use ActiveModel has_secure_password
+  s.add_dependency 'serialized_attr_accessors', '~> 0.1.0'
 
   s.add_development_dependency "sqlite3"
 end
