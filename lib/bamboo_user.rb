@@ -31,14 +31,8 @@ module BambooUser
     options
   end
 
-  mattr_accessor :details_class_name
-  @@details_class_name = nil
-
-  mattr_accessor :detail_attributes_to_delegate
-  @@detail_attributes_to_delegate = []
-
   mattr_accessor :detail_attributes_to_not_delegate
-  @@detail_attributes_to_not_delegate = %w(id user_id created_at updated_at)
+  @@detail_attributes_to_not_delegate = %w(id id= user_id user_id= created_at updated_at)
 
   mattr_accessor :owner_class_name
   @@owner_class_name = nil

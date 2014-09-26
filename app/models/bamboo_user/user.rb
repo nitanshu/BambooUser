@@ -8,21 +8,24 @@ module BambooUser
     has_secure_password
 
     #---Associations------------------------------------------------
-    if BambooUser.details_class_available?
-      has_one(BambooUser.details_class_name.underscore.to_sym, dependent: :destroy)
-      accepts_nested_attributes_for BambooUser.details_class_name.underscore.to_sym
-      after_initialize :provision_user_detail
-      delegate *([BambooUser.details_class_name.constantize.attribute_names + BambooUser.detail_attributes_to_delegate].flatten.compact.delete_if { |x| BambooUser.detail_attributes_to_not_delegate.include?(x) }), to: BambooUser.details_class_name.underscore
-    end
+    has_one :user_detail, foreign_key: 'user_id', dependent: :destroy, autosave: true
+    belongs_to(BambooUser.owner_class_name.to_s.underscore.to_sym, foreign_key: 'owner_id') if BambooUser.owner_available?
 
     #---Callbacks --------------------------------------------------
+    after_initialize :provision_user_detail
     before_validation :strip_email
     before_create :generate_auth_token
 
     #---Validations ------------------------------------------------
     validates :email, format: {with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i}, uniqueness: true
 
-    belongs_to(BambooUser.owner_class_name.to_s.underscore.to_sym, foreign_key: 'owner_id') if BambooUser.owner_available?
+    #---Nested attributes acceptance -------------------------------
+    accepts_nested_attributes_for :user_detail
+
+    ##---Delegations ------------------------------------------------
+    delegate *([BambooUser::UserDetail.attribute_names +
+                    BambooUser::UserDetail.attribute_names.collect { |x| "#{x}=" }
+    ].flatten.compact.delete_if { |x| BambooUser.detail_attributes_to_not_delegate.include?(x) }), to: :user_detail
 
     def request_reset_password!
       BambooUser.after_password_reset_request_callback({
@@ -42,7 +45,10 @@ module BambooUser
 
     private
     def provision_user_detail
-      send("build_#{BambooUser.details_class_name.underscore}") if send(BambooUser.details_class_name.underscore).nil?
+      if self.user_detail.nil?
+        build_user_detail
+        #self.user_detail.user = self
+      end
     end
 
     def strip_email
