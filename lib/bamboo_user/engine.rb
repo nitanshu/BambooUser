@@ -1,4 +1,5 @@
 require 'serialized_attr_accessors'
+require 'action_view/helpers'
 
 module BambooUser
   class Engine < ::Rails::Engine
@@ -20,7 +21,7 @@ module BambooUser
         end
 
         def fetch_logged_user
-          redirect_to(bamboo_user.login_path, notice: 'Login is required. Please login here') unless logged_in? if restrict_access?
+          redirect_to(eval(BambooUser.login_screen_path), notice: 'Login is required. Please login here') unless logged_in? if restrict_access?
         end
 
         def restrict_access?
@@ -60,6 +61,11 @@ module BambooUser
       ActionController::Base.send :before_filter, :store_location
       ActionController::Base.send :before_filter, :fetch_logged_user
     end
+
+    initializer "bamboo_users.view_helpers" do
+      ActionView::Base.send :include, BambooUser::ApplicationHelper
+    end
+
   end
 
 end
