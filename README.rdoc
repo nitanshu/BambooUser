@@ -27,9 +27,14 @@ Mount BambooUser at specifc location (from routes.rb of application):
 == Usage
 
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.
-But to customize, there are few other options kept open:
+But to customize, there are few other options kept open. Add an initializer file (may be bamboo_user_settings.rb) and keep on adjusting with below given hooks/ports
 
-    TODO: Add customization tutorial here
+1. By default whole of application becomes "closed" the time bamboo_user engine boots up. But to make specific set of pages public (i.e availble without logged in user)
+    BambooUser.public_paths = {
+            home: [:welcome],
+            controller_name_2: [:action_1, :action_2, :action_3],
+            controller_name_3: [BambooUser.all_actions]
+        }
 
 
 == Contributing
