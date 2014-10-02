@@ -74,7 +74,29 @@ To generate Forgot-password form
     <%end %>
 
 
-== Usage
+== Helpers (continued) snippets
+
+Default styled login form
+
+    login_snippet
+
+
+Default styled signup form (small)
+
+    signup_snippet
+
+
+Default styled signup form (extended)
+
+    signup_extended_snippet
+
+
+Default styled forgot-password (reset password) form
+
+    reset_password_snippet
+
+
+== Customizations
 
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.
 But to customize, there are few other options kept open. Add an initializer file (may be bamboo_user_settings.rb) and keep on adjusting with below given hooks/ports
