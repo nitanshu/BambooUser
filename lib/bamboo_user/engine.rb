@@ -58,6 +58,7 @@ module BambooUser
       end
 
       ActionController::Base.send :helper_method, :logged_user
+      ActionController::Base.send :helper_method, :logged_in?
       ActionController::Base.send :before_filter, :store_location
       ActionController::Base.send :before_filter, :fetch_logged_user
     end

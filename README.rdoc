@@ -24,6 +24,18 @@ Mount BambooUser at specifc location (from routes.rb of application):
 
     mount BambooUser::Engine => "/some_specific_location"
 
+== Helpers
+
+To check if application is available with a logged in user in session.
+
+    logged_in?
+
+
+To access already logged in user from session.
+
+    logged_user
+
+
 == Usage
 
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.
