@@ -1,0 +1,41 @@
+<div id="form signup_form">
+  <%= signup_form do |f| %>
+      <% if @user.errors.any? %>
+          <div id="error_explanation">
+            <h2>Sign-up failed, because of <%= pluralize(@user.errors.count, "error") %></h2>
+
+            <ul>
+              <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+      <% end %>
+      <div class="row">
+        <% if show_label %>
+            <div class="col lbl"><%= f.label :email %></div>
+        <% end %>
+        <div class="col"><%= f.text_field :email %></div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="row">
+        <% if show_label %>
+            <div class="col lbl"><%= f.label :password %></div>
+        <% end %>
+        <div class="col"><%= f.password_field :password %></div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="row">
+        <% if show_label %>
+            <div class="col lbl"><%= f.label :password_confirmation, 'Re-enter password' %></div>
+        <% end %>
+        <div class="col"><%= f.password_field :password_confirmation %></div>
+        <div class="clearfix"></div>
+      </div>
+
+      <div class="row sub">
+        <div class="col"><%= f.submit 'Signup' %></div>
+        <div class="clearfix"></div>
+      </div>
+  <% end %>
+</div>
