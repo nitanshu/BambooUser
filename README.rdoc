@@ -1,6 +1,6 @@
 = \BambooUser
 
-This gem packages a rails engine which provides basic User CRUD with Signup, Login, Logout and Forgot password functionalities with othres.
+This gem packages a rails engine which provides basic User CRUD with Signup, Login, Logout and Forgot password functionalities with others.
 
 == Installation
 
@@ -16,11 +16,11 @@ Execute rake task to copy migrations from engine to rails application:
 
     rake bamboo_user:install:migrations
 
-Edit <tt>xxxxxxxxxxxxxx__create_bamboo_user_users.bamboo_user.rb</tt> to add more fields and do up migrations:
+Edit <tt>xxxxxxxxxxxxxx_create_bamboo_user_users.bamboo_user.rb</tt> to add more fields and do up migrations:
 
     rake db:migrate
 
-Mount BambooUser at specifc location (from routes.rb of application):
+Mount BambooUser at specific location (from routes.rb of application):
 
     mount BambooUser::Engine => "/some_specific_location"
 
@@ -78,27 +78,27 @@ To generate Forgot-password form
 
 Default styled login form
 
-    login_snippet
+    <%=login_snippet %>
 
 
 Default styled signup form (small)
 
-    signup_snippet
+    <%=signup_snippet %>
 
 
 Default styled signup form (extended)
 
-    signup_extended_snippet
+    <%=signup_extended_snippet %>
 
 
 Default styled forgot-password (reset password) form
 
-    reset_password_snippet
+    <%=reset_password_snippet %>
 
 
 == Callbacks
 
-After successfull signup
+After successful signup
 
     def BambooUser.after_registration_success_callback(options)
         #user code
@@ -124,7 +124,7 @@ After user visit and validates correct password-reset link (may be sent over ema
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.
 But to customize, there are few other options kept open. Add an initializer file (may be bamboo_user_settings.rb) and keep on adjusting with below given hooks/ports
 
-1. By default whole of application becomes "closed" the time bamboo_user engine boots up. But to make specific set of pages public (i.e availble without logged in user)
+1. By default whole of application becomes "closed" the time bamboo_user engine boots up. But to make specific set of pages public (i.e available without logged in user)
     BambooUser.public_paths = {
             home: [:welcome],
             controller_name_2: [:action_1, :action_2, :action_3],
@@ -160,13 +160,13 @@ But to customize, there are few other options kept open. Add an initializer file
     BambooUser.owner_class_reverse_association = 'users'
 
 
-9. By default a model UserDetail is also made availble to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegeted to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
+9. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
     BambooUser.detail_attributes_to_not_delegate << ['details_attribute_1', 'details_attribute_2', 'details_attribute_3' ]
 
 
 == Add on facility
 
-BambooUser engine comes equipped with photofy gem( https://github.com/praveenkumarsinha/Photofy ) and also have a photofy field <b>photo</b> by default availble. To add more photofy fields or override default, specify it like this
+BambooUser engine comes equipped with photofy gem( https://github.com/praveenkumarsinha/Photofy ) and also have a photofy field <b>photo</b> by default available. To add more photofy fields or override default, specify it like this
 
     BambooUser.add_photofy do |user_class|
         user_class.photofy :collage
