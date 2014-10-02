@@ -1,8 +1,5 @@
 module BambooUser
 
-  mattr_reader :all_actions
-  @@all_actions = '*'
-
   def self.owner_available?
     (not owner_class_name.nil?) and
         (not owner_class_reverse_association.nil?) and
@@ -31,6 +28,16 @@ module BambooUser
     options
   end
 
+  #Usage example:
+  #BambooUser.add_photofy do |user_class|
+  # user_class.photofy :collage
+  #end
+  def self.add_photofy
+    raise 'BlockExpected' unless block_given?
+    require 'photofy'
+    yield(BambooUser::User)
+  end
+
   mattr_accessor :detail_attributes_to_not_delegate
   @@detail_attributes_to_not_delegate = %w(id id= user_id user_id= created_at updated_at)
 
@@ -51,6 +58,9 @@ module BambooUser
 
   mattr_accessor :login_screen_layout
   @@login_screen_layout = 'application'
+
+  mattr_reader :all_actions
+  @@all_actions = '*'
 
   mattr_accessor :public_paths
   @@public_paths = {controller_name_1: [all_actions], controller_name_2: [:action_1, :action_2, :action_3]}

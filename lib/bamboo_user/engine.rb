@@ -1,4 +1,3 @@
-require 'serialized_attr_accessors'
 require 'action_view/helpers'
 
 module BambooUser
