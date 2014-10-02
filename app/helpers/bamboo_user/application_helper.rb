@@ -6,7 +6,9 @@ module BambooUser
     end
 
     def signup_form(options={}, &block)
-      form_for(@user, options.merge(url: bamboo_user.sign_up_path), &block)
+      options = options.merge(url: bamboo_user.sign_up_path)
+      options = options.merge(multipart: true) if BambooUser.photofy_enabled
+      form_for(@user, options, &block)
     end
 
     def reset_password_form(options={}, &block)

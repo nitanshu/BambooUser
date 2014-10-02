@@ -73,7 +73,7 @@ module BambooUser
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation, user_detail_attributes: [])
+      params.require(:user).permit(:email, :password, :password_confirmation, :photo, user_detail_attributes: [])
     end
   end
 end

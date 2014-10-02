@@ -28,6 +28,9 @@ module BambooUser
     options
   end
 
+  mattr_reader :photofy_enabled
+  @@photofy_enabled = false
+
   #Usage example:
   #BambooUser.add_photofy do |user_class|
   # user_class.photofy :collage
@@ -36,6 +39,7 @@ module BambooUser
     raise 'BlockExpected' unless block_given?
     require 'photofy'
     yield(BambooUser::User)
+    @@photofy_enabled = true
   end
 
   mattr_accessor :detail_attributes_to_not_delegate

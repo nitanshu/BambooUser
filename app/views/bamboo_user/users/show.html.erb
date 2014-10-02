@@ -10,5 +10,10 @@
   <%= @user.password %>
 </p>
 
+<p>
+  <strong>Photo:</strong>
+  <%= image_tag(@user.photo_path.gsub(Rails.root.to_s, '')) %>
+</p>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

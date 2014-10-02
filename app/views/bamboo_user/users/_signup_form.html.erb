@@ -32,7 +32,15 @@
         <div class="col"><%= f.password_field :password_confirmation %></div>
         <div class="clearfix"></div>
       </div>
-
+      <% if show_extended %>
+          <div class="row">
+            <% if show_label %>
+                <div class="col lbl"><%= f.label :photo %></div>
+            <% end %>
+            <div class="col"><%= f.file_field :photo %></div>
+            <div class="clearfix"></div>
+          </div>
+      <% end %>
       <div class="row sub">
         <div class="col"><%= f.submit 'Signup' %></div>
         <div class="clearfix"></div>
