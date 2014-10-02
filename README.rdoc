@@ -65,6 +65,19 @@ But to customize, there are few other options kept open. Add an initializer file
     BambooUser.owner_class_reverse_association = 'users'
 
 
+9. By default a model UserDetail is also made availble to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegeted to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
+    BambooUser.detail_attributes_to_not_delegate << ['details_attribute_1', 'details_attribute_2', 'details_attribute_3' ]
+
+
+== Add on facility
+
+BambooUser engine comes equipped with photofy gem( https://github.com/praveenkumarsinha/Photofy ) and also have a photofy field <b>photo</b> by default availble. To add more photofy fields or override default, specify it like this
+
+    BambooUser.add_photofy do |user_class|
+        user_class.photofy :collage
+    end
+
+
 == Contributing
 
 1. Fork it ( https://github.com/praveenkumarsinha/BambooUser/fork )
