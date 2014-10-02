@@ -1,6 +1,22 @@
 module BambooUser
   module ApplicationHelper
 
+    def column_type_to_field
+      {
+          'string' => 'text_field',
+          'text' => 'text_area',
+          'integer' => 'number_field',
+          'float' => 'text_field',
+          'decimal' => 'text_field',
+          'datetime' => 'datetime_field',
+          'timestamp' => 'datetime_field',
+          'time' => 'time_field',
+          'date' => 'date_field',
+          'binary' => 'file_field',
+          'boolean' => 'check_box'
+      }
+    end
+
     def login_form(options={}, &block)
       form_for(:user, options.merge(url: bamboo_user.login_path), &block)
     end
@@ -24,9 +40,16 @@ module BambooUser
       render(partial: 'bamboo_user/sessions/login_form', locals: _default_options.merge(options))
     end
 
-    def signup_snippet(options={})
+    def signup_snippet
+      signup_extended_snippet({show_label: true,
+                               show_photo: false,
+                               show_extended: false})
+    end
+
+    def signup_extended_snippet(options={})
       _default_options = {
           show_label: true,
+          show_photo: true,
           show_extended: true}
       render(partial: 'bamboo_user/users/signup_form', locals: _default_options.merge(options))
     end

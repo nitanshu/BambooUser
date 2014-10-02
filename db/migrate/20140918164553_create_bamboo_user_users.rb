@@ -2,6 +2,7 @@ class CreateBambooUserUsers < ActiveRecord::Migration
   def change
     create_table :bamboo_user_users do |t|
       t.integer :owner_id
+      t.string :type
       t.string :email
       t.string :password_digest
       t.string :auth_token

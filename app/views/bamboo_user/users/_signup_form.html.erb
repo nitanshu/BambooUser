@@ -32,7 +32,7 @@
         <div class="col"><%= f.password_field :password_confirmation %></div>
         <div class="clearfix"></div>
       </div>
-      <% if show_extended %>
+      <% if show_photo or show_extended %>
           <div class="row">
             <% if show_label %>
                 <div class="col lbl"><%= f.label :photo %></div>
@@ -40,6 +40,21 @@
             <div class="col"><%= f.file_field :photo %></div>
             <div class="clearfix"></div>
           </div>
+      <% end %>
+      <% if show_extended %>
+          <%= f.fields_for :user_detail do |ud_f| %>
+              <% BambooUser::UserDetail.columns_hash.each do |key, value| %>
+                  <% unless BambooUser.detail_attributes_to_not_delegate.include?(key) %>
+                      <div class="row">
+                        <% if show_label %>
+                            <div class="col lbl"><%= ud_f.label key %></div>
+                        <% end %>
+                        <div class="col"><%= ud_f.public_send(column_type_to_field[value.type.to_s], key) %></div>
+                        <div class="clearfix"></div>
+                      </div>
+                  <% end %>
+              <% end %>
+          <% end %>
       <% end %>
       <div class="row sub">
         <div class="col"><%= f.submit 'Signup' %></div>
