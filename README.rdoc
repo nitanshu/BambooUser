@@ -14,11 +14,15 @@ Then execute:
 
 Execute rake task to copy migrations from engine to rails application:
 
-    rake railties:install:migrations
+    rake bamboo_user:install:migrations
 
-Edit xxxxxxxxxxxxxx_create_bamboo_user_user_details.rb to add more fields and do up migrations:
+Edit xxxxxxxxxxxxxx__create_bamboo_user_users.bamboo_user.rb to add more fields and do up migrations:
 
     rake db:migrate
+
+Mount BambooUser at specifc location (from routes.rb of application):
+
+    mount BambooUser::Engine => "/some_specific_location"
 
 == Usage
 
