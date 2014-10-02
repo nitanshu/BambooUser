@@ -40,23 +40,23 @@ But to customize, there are few other options kept open. Add an initializer file
     BambooUser.login_screen_layout = 'some_layout'
 
 
-3. To specify layout for signup screen _(Default is *application*)_.
+3. To specify layout for signup screen <em>(Default is <b>application</b>)</em>.
     BambooUser.signup_screen_layout = 'some_layout'
 
 
-4. To specify redirect path after login _(Default is *main_app.root_path*)_.
+4. To specify redirect path after login <em>(Default is <b>main_app.root_path</b>)</em>.
     BambooUser.after_login_path = 'main_app.some_defined_path_from_routes'
 
 
-5. To specify redirect path after logout _(Default is *main_app.root_path*)_.
+5. To specify redirect path after logout <em>(Default is <b>main_app.root_path</b>)</em>.
     BambooUser.after_logout_path = 'main_app.some_defined_path_from_routes'
 
 
-6. To specify redirect path after signup _(Default is *main_app.root_path*)_.
+6. To specify redirect path after signup <em>(Default is <b>main_app.root_path</b>)</em>.
     BambooUser.after_signup_path = 'main_app.some_defined_path_from_routes'
 
 
-7. In case if login screen needs to be different from the default login screen of engine then specify it (like this so that application can redirect to correct login screen in when logged-in user is not found). _(Default is *bamboo_user.login_path*)_
+7. In case if login screen needs to be different from the default login screen of engine then specify it (like this so that application can redirect to correct login screen in when logged-in user is not found). <em>(Default is <b>bamboo_user.login_path</b>)</em>
     BambooUser.login_screen_path = 'main_app.some_login_path_from_routes'
 
 
