@@ -7,11 +7,11 @@ require "bamboo_user/version"
 Gem::Specification.new do |s|
   s.name = "bamboo_user"
   s.version = BambooUser::VERSION
-  s.authors = ["TODO: Your name"]
-  s.email = ["TODO: Your email"]
+  s.authors = ["Praveen Kumar Sinha"]
+  s.email = ["praveen.kumar.sinha@gmail.com"]
   s.homepage = "TODO"
-  s.summary = "TODO: Summary of BambooUser."
-  s.description = "TODO: Description of BambooUser."
+  s.summary = "Small rails engine to provide a ready-to-use user engine for login and signup"
+  s.description = "Small rails engine to provide a ready-to-use user engine for login and signup"
   s.license = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
@@ -21,6 +21,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'bcrypt', '~> 3.1.7' # Use ActiveModel has_secure_password
   s.add_dependency 'rmagick', '~> 2.13.3'
   s.add_dependency 'photofy', '~> 0.2.2'
-
-  s.add_development_dependency "sqlite3"
 end
