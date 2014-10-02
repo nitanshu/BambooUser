@@ -58,7 +58,7 @@ module BambooUser
   @@after_login_path = 'main_app.root_path'
 
   mattr_accessor :after_signup_path
-  @@after_signup_path = @@after_login_path
+  @@after_signup_path = 'main_app.root_path'
 
   mattr_accessor :after_logout_path
   @@after_logout_path = 'main_app.root_path'
