@@ -96,6 +96,29 @@ Default styled forgot-password (reset password) form
     reset_password_snippet
 
 
+== Callbacks
+
+After successfull signup
+
+    def BambooUser.after_registration_success_callback(options)
+        #user code
+    end
+
+
+After password-reset request has been placed with a valid email of user
+
+    def BambooUser.after_password_reset_request_callback(options)
+        #user code
+    end
+
+
+After user visit and validates correct password-reset link (may be sent over email or by other means)
+
+    def BambooUser.after_password_reset_confirmed_callback(options)
+        #user code
+    end
+
+
 == Customizations
 
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.

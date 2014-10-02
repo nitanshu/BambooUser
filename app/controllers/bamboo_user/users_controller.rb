@@ -14,6 +14,8 @@ module BambooUser
         if @user.save
           session[:user] = @user.id
           #cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
+
+          BambooUser.after_registration_success_callback({user: @user})
           redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path)) and return
         end
       end
