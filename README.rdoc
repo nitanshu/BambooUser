@@ -1,3 +1,48 @@
-= BambooUser
+# BambooUser
 
-This project rocks and uses MIT-LICENSE.
+This gem packages a rails engine which provides basic User CRUD with signup, login, logout and Forgot password functionalities with othres.
+
+See [VERSIONS.md](/lib/bamboo_user/version.rb) to see which versions of bamboo_user bundle.
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'bamboo_user', :git => 'git@github.com:praveenkumarsinha/BambooUser.git'
+```
+
+Then execute:
+
+    $ bundle
+
+Execute rake task to copy migrations from engine to rails application:
+
+```ruby
+rake railties:install:migrations
+```
+
+Edit xxxxxxxxxxxxxx_create_bamboo_user_user_details.rb to add more fields and do up migrations:
+
+```ruby
+rake db:migrate
+```
+
+## Usage
+
+It should suffice 90% of a basic rails requirement for user signup, login and other related activities.
+But to customize, there are few other options kept open:
+
+```ruby
+TODO: Add customization tutorial here
+```
+
+
+## Contributing
+
+1. Fork it ( https://github.com/praveenkumarsinha/BambooUser/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+

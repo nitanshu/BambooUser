@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version = BambooUser::VERSION
   s.authors = ["Praveen Kumar Sinha"]
   s.email = ["praveen.kumar.sinha@gmail.com"]
-  s.homepage = "TODO"
+  s.homepage = "https://github.com/praveenkumarsinha/BambooUser"
   s.summary = "Small rails engine to provide a ready-to-use user engine for login and signup"
   s.description = "Small rails engine to provide a ready-to-use user engine for login and signup"
   s.license = "MIT"
