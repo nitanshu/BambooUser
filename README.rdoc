@@ -16,7 +16,7 @@ Execute rake task to copy migrations from engine to rails application:
 
     rake bamboo_user:install:migrations
 
-Edit xxxxxxxxxxxxxx__create_bamboo_user_users.bamboo_user.rb to add more fields and do up migrations:
+Edit <tt>xxxxxxxxxxxxxx__create_bamboo_user_users.bamboo_user.rb</tt> to add more fields and do up migrations:
 
     rake db:migrate
 
