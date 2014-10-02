@@ -50,7 +50,8 @@ module BambooUser
             #request.path != "/users/sign_out"
             session[:previous_url] = request.fullpath unless [bamboo_user.login_path,
                                                               bamboo_user.logout_path,
-                                                              bamboo_user.reset_password_path].include?(request.path)
+                                                              bamboo_user.reset_password_path,
+                                                              bamboo_user.sign_up_path].include?(request.path)
           end
 
         end

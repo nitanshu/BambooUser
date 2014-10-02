@@ -22,7 +22,7 @@ module BambooUser
     #---Nested attributes acceptance -------------------------------
     accepts_nested_attributes_for :user_detail
 
-    ##---Delegations ------------------------------------------------
+    #---Delegations ------------------------------------------------
     delegate *([BambooUser::UserDetail.attribute_names +
                     BambooUser::UserDetail.attribute_names.collect { |x| "#{x}=" }
     ].flatten.compact.delete_if { |x| BambooUser.detail_attributes_to_not_delegate.include?(x) }), to: :user_detail

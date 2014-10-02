@@ -53,11 +53,17 @@ module BambooUser
   mattr_accessor :after_login_path
   @@after_login_path = 'main_app.root_path'
 
+  mattr_accessor :after_signup_path
+  @@after_signup_path = @@after_login_path
+
   mattr_accessor :after_logout_path
   @@after_logout_path = 'main_app.root_path'
 
   mattr_accessor :login_screen_layout
   @@login_screen_layout = 'application'
+
+  mattr_accessor :signup_screen_layout
+  @@signup_screen_layout = 'application'
 
   mattr_reader :all_actions
   @@all_actions = '*'

@@ -12,5 +12,8 @@ BambooUser::Engine.routes.draw do
   get 'validate-password-reset/:encoded_params' => 'sessions#validate_password_reset', as: 'validate_password_reset'
   post 'validate-password-reset/:encoded_params' => 'sessions#validate_password_reset'
 
+  get 'sign-up' => 'users#sign_up', as: 'sign_up'
+  post 'sign-up' => 'users#sign_up'
+
   resources :users
 end

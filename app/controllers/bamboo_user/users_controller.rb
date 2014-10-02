@@ -3,8 +3,22 @@ require_dependency "bamboo_user/application_controller"
 module BambooUser
   class UsersController < ApplicationController
 
-    before_filter :fetch_model_reflection, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+    skip_before_filter :fetch_logged_user, only: [:sign_up]
+    before_filter :fetch_model_reflection, only: [:sign_up, :index, :show, :new, :create, :edit, :update, :destroy]
     before_action :set_user, only: [:show, :edit, :update, :destroy]
+
+    def sign_up
+      @user = @model.new
+      if request.post?
+        @user = @model.new(user_params)
+        if @user.save
+          session[:user] = @user.id
+          #cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
+          redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path)) and return
+        end
+      end
+      render layout: BambooUser.signup_screen_layout
+    end
 
     # GET /users
     def index
@@ -59,7 +73,7 @@ module BambooUser
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:email, :password)
+      params.require(:user).permit(:email, :password, :password_confirmation, user_detail_attributes: [])
     end
   end
 end

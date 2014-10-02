@@ -37,3 +37,8 @@
       </div>
   <% end %>
 </div>
+<% if show_signup_link %>
+    <div id="form login_form">
+      <%=link_to('Signup', bamboo_user.sign_up_path)%>
+    </div>
+<% end %>
