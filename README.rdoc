@@ -60,6 +60,11 @@ But to customize, there are few other options kept open. Add an initializer file
     BambooUser.login_screen_path = 'main_app.some_login_path_from_routes'
 
 
+8. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
+    BambooUser.owner_class_name = 'Account'
+    BambooUser.owner_class_reverse_association = 'users'
+
+
 == Contributing
 
 1. Fork it ( https://github.com/praveenkumarsinha/BambooUser/fork )
