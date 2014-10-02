@@ -6,10 +6,6 @@ module BambooUser
         (owner_class_name.constantize.reflections[owner_class_reverse_association.to_sym].try(:class_name) == 'BambooUser::User')
   end
 
-  def self.details_class_available?
-    (not details_class_name.nil?) and (details_class_name.constantize rescue false)
-  end
-
   def self.welcome_on_registration_success_email(options)
     puts 'This is a stub. Suggestion: Please re-define it to send welcome email.'
     puts "options: #{options.inspect}"
