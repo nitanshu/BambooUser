@@ -36,6 +36,44 @@ To access already logged in user from session.
     logged_user
 
 
+To generate Login form with default Forgot-password link and Signup link
+
+    <%=login_form do |f| %>
+        <%= f.text_field :email %>
+        <%= f.password_field :password %>
+        <%= check_box_tag(:remember_me, 1, true) %>
+        <%= f.submit 'Login' %>
+    <%end %>
+
+    <%=link_to('Forgot password', bamboo_user.reset_password_path) %>
+    <%=link_to('Signup', bamboo_user.sign_up_path)%>
+
+
+To generate Signup form
+
+    <%=signup_form do |f| %>
+        <%= f.text_field :email %>
+        <%= f.password_field :password %>
+        <%= f.password_field :password_confirmation %>
+        <%= f.file_field :photo %>
+        <%= f.fields_for :user_detail do |ud_f| %>
+            <%= ud_f.text_field :first_name %>
+            .
+            .
+            <%= ud_f.text_field :last_name %>
+        <%= end %>
+        <%= f.submit 'Signup' %>
+    <%end %>
+
+
+To generate Forgot-password form
+
+    <%=reset_password_form do |f| %>
+        <%= f.email_field :email %>
+        <%= f.submit 'Reset password' %>
+    <%end %>
+
+
 == Usage
 
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.
