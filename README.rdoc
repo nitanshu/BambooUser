@@ -36,7 +36,7 @@ But to customize, there are few other options kept open. Add an initializer file
             controller_name_3: [BambooUser.all_actions]
         }
 
-2. To specify layout for login screen _(Default is *application*)_.
+2. To specify layout for login screen <em>(Default is <b>application</b>)</em>.
     BambooUser.login_screen_layout = 'some_layout'
 
 
