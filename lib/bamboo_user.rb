@@ -62,6 +62,9 @@ module BambooUser
   mattr_accessor :after_change_password_path
   @@after_change_password_path = 'bamboo_user.my_profile_path'
 
+  mattr_accessor :after_change_password_failed_path
+  @@after_change_password_failed_path = 'bamboo_user.change_password_path'
+
   mattr_accessor :login_screen_layout
   @@login_screen_layout = 'application'
 
