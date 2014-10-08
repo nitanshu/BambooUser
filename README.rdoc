@@ -175,10 +175,11 @@ But to customize, there are few other options kept open. Add an initializer file
 
 
 9. To specify redirect path after failed change-password <em>(Default is <b>bamboo_user.change_password_path</b>)</em>.
-    BambooUser.after_change_password_failed_path = 'bamboo_user.change_password_path'
+        BambooUser.after_change_password_failed_path = 'bamboo_user.change_password_path'
 
 
 10. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
+
     BambooUser.owner_class_name = 'Account'
     BambooUser.owner_class_reverse_association = 'users'
 
