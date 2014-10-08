@@ -3,6 +3,7 @@ module BambooUser
 
     #---Attributes declarations-------------------------------------
     attr_accessor :temp_owner_id
+    attr_accessor :current_password
 
     #---For authentication from bcrypt-ruby-------------------------
     has_secure_password

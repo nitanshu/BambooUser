@@ -1,5 +1,5 @@
 BambooUser::Engine.routes.draw do
-  root 'users#index'
+  root 'users#profile'
 
   get 'login' => 'sessions#login', as: 'login'
   post 'login' => 'sessions#login'
@@ -14,6 +14,11 @@ BambooUser::Engine.routes.draw do
 
   get 'sign-up' => 'users#sign_up', as: 'sign_up'
   post 'sign-up' => 'users#sign_up'
+
+  get 'change-password' => 'users#change_password', as: 'change_password'
+  post 'change-password' => 'users#change_password'
+
+  get 'my-profile' => 'users#profile', as: 'my_profile'
 
   resources :users
 end

@@ -59,6 +59,9 @@ module BambooUser
   mattr_accessor :after_logout_path
   @@after_logout_path = 'main_app.root_path'
 
+  mattr_accessor :after_change_password_path
+  @@after_change_password_path = 'bamboo_user.my_profile_path'
+
   mattr_accessor :login_screen_layout
   @@login_screen_layout = 'application'
 

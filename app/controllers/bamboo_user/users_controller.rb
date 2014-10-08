@@ -7,6 +7,9 @@ module BambooUser
     before_filter :fetch_model_reflection, only: [:sign_up, :index, :show, :new, :create, :edit, :update, :destroy]
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
+    def profile
+    end
+
     def sign_up
       @user = @model.new
       if request.post?
@@ -20,6 +23,22 @@ module BambooUser
         end
       end
       render layout: BambooUser.signup_screen_layout
+    end
+
+    def change_password
+      if request.post?
+        @user = logged_user
+        if @user.authenticate(params[:user][:current_password]) and not (params[:user][:password].blank?)
+          if @user.update(user_params)
+            redirect_to(eval(BambooUser.after_change_password_path), notice: 'Password changed successfully.') and return
+          else
+            logger.info @user.errors.inspect
+            flash[:notice] = "Invalid current password or password confirmation failed."
+          end
+        else
+          flash[:notice] = "Either current or new password is invalid"
+        end
+      end
     end
 
     # GET /users

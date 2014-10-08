@@ -31,6 +31,10 @@ module BambooUser
       form_for(@user, options.merge(url: bamboo_user.reset_password_path), &block)
     end
 
+    def change_password_form(options={}, &block)
+      form_for(:user, options.merge(url: bamboo_user.change_password_path), &block)
+    end
+
     def login_snippet(options={})
       _default_options = {
           show_label: true,
@@ -60,6 +64,14 @@ module BambooUser
           instructions: true,
           instruction_message: 'Please enter your registered email address below and click “Reset password”. You will receive an email containing instructions and a temporary link for resetting your password.'}
       render(partial: 'bamboo_user/sessions/reset_password_form', locals: _default_options.merge(options))
+    end
+
+    def change_password_snippet(options={})
+      _default_options = {
+          show_label: true,
+          instructions: true,
+          instruction_message: 'Please enter your current password and then new password along with its confirmation for change of password.'}
+      render(partial: 'bamboo_user/users/change_password_form', locals: _default_options.merge(options))
     end
 
   end
