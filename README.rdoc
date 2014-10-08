@@ -74,6 +74,16 @@ To generate Forgot-password form
     <%end %>
 
 
+To generate Change-password form
+
+    <%=change_password_form do |f| %>
+        <%= f.password_field :current_password, autofocus: true %>
+        <%= f.password_field :password %>
+        <%= f.password_field :password_confirmation %>
+        <%= f.submit 'Change password' %>
+    <%end %>
+
+
 == Helpers (continued) snippets
 
 Default styled login form
@@ -94,6 +104,11 @@ Default styled signup form (extended)
 Default styled forgot-password (reset password) form
 
     <%=reset_password_snippet %>
+
+
+Default styled change-password form
+
+    <%= change_password_snippet %>
 
 
 == Callbacks
@@ -155,12 +170,16 @@ But to customize, there are few other options kept open. Add an initializer file
     BambooUser.login_screen_path = 'main_app.some_login_path_from_routes'
 
 
-8. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
+8. To specify redirect path after change-password <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
+    BambooUser.after_change_password_path = 'bamboo_user.my_profile_path'
+
+
+9. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
     BambooUser.owner_class_name = 'Account'
     BambooUser.owner_class_reverse_association = 'users'
 
 
-9. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
+10. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
     BambooUser.detail_attributes_to_not_delegate << ['details_attribute_1', 'details_attribute_2', 'details_attribute_3' ]
 
 
