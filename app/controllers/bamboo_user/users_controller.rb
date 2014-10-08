@@ -33,10 +33,10 @@ module BambooUser
             redirect_to(eval(BambooUser.after_change_password_path), notice: 'Password changed successfully.') and return
           else
             logger.info @user.errors.inspect
-            flash[:notice] = "Invalid current password or password confirmation failed."
+            redirect_to(:back, notice: "Invalid current password or password confirmation failed.") and return
           end
         else
-          flash[:notice] = "Either current or new password is invalid"
+          redirect_to(:back, notice: "Either current or new password is invalid.") and return
         end
       end
     end
