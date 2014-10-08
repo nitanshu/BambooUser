@@ -180,8 +180,8 @@ But to customize, there are few other options kept open. Add an initializer file
 
 10. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
 
-    BambooUser.owner_class_name = 'Account'
-    BambooUser.owner_class_reverse_association = 'users'
+        BambooUser.owner_class_name = 'Account'
+        BambooUser.owner_class_reverse_association = 'users'
 
 
 11. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
