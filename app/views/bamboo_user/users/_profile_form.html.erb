@@ -1,0 +1,64 @@
+<div id="form signup_form">
+  <%= profile_form do |f| %>
+      <% if @user.errors.any? %>
+          <div id="error_explanation">
+            <h2>Update failed, because of <%= pluralize(@user.errors.count, "error") %></h2>
+
+            <ul>
+              <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+      <% end %>
+      <div class="row">
+        <% if show_label %>
+            <div class="col lbl"><%= f.label :email %></div>
+        <% end %>
+        <div class="col"><%= f.text_field :email, autofocus: true %></div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="row">
+        <% if show_label %>
+            <div class="col lbl"><%= f.label :password %></div>
+        <% end %>
+        <div class="col"><%= f.password_field :password %></div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="row">
+        <% if show_label %>
+            <div class="col lbl"><%= f.label :password_confirmation, 'Re-enter password' %></div>
+        <% end %>
+        <div class="col"><%= f.password_field :password_confirmation %></div>
+        <div class="clearfix"></div>
+      </div>
+      <% if show_photo or show_extended %>
+          <div class="row">
+            <% if show_label %>
+                <div class="col lbl"><%= f.label :photo %></div>
+            <% end %>
+            <div class="col"><%= f.file_field :photo %></div>
+            <div class="clearfix"></div>
+          </div>
+      <% end %>
+      <% if show_extended %>
+          <%= f.fields_for :user_detail do |ud_f| %>
+              <% BambooUser::UserDetail.columns_hash.each do |key, value| %>
+                  <% unless BambooUser.detail_attributes_to_not_delegate.include?(key) %>
+                      <div class="row">
+                        <% if show_label %>
+                            <div class="col lbl"><%= ud_f.label key %></div>
+                        <% end %>
+                        <div class="col"><%= ud_f.public_send(column_type_to_field[value.type.to_s], key) %></div>
+                        <div class="clearfix"></div>
+                      </div>
+                  <% end %>
+              <% end %>
+          <% end %>
+      <% end %>
+      <div class="row sub">
+        <div class="col"><%= f.submit 'Update' %></div>
+        <div class="clearfix"></div>
+      </div>
+  <% end %>
+</div>

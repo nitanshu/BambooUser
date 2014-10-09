@@ -8,6 +8,25 @@ module BambooUser
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
     def profile
+      render layout: BambooUser.profile_screen_layout
+    end
+
+    def edit_profile
+      @user = logged_user
+      if request.patch?
+        if @user.update(user_params)
+          redirect_to eval(BambooUser.after_profile_save_path) and return
+        else
+          logger.info @user.errors.inspect
+
+          #TODO: Its should be "render action: 'xxxx' " instead of redirect because in that case,
+          #will loose errors on current acting object while rendering view
+          #render action: eval(BambooUser.after_profile_save_failed_path), notice: 'Failed to save' and return
+          redirect_to eval(BambooUser.after_profile_save_failed_path), notice: 'Failed to save' and return
+        end
+      end
+
+      render layout: BambooUser.profile_screen_layout
     end
 
     def sign_up

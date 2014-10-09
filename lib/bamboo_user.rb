@@ -59,6 +59,12 @@ module BambooUser
   mattr_accessor :after_signup_failed_path
   @@after_signup_failed_path = 'bamboo_user.sign_up_path'
 
+  mattr_accessor :after_profile_save_path
+  @@after_profile_save_path = 'bamboo_user.my_profile_path'
+
+  mattr_accessor :after_profile_save_failed_path
+  @@after_profile_save_failed_path = 'bamboo_user.edit_profile_path'
+
   mattr_accessor :after_logout_path
   @@after_logout_path = 'main_app.root_path'
 
@@ -73,6 +79,9 @@ module BambooUser
 
   mattr_accessor :signup_screen_layout
   @@signup_screen_layout = 'application'
+
+  mattr_accessor :profile_screen_layout
+  @@profile_screen_layout = 'application'
 
   mattr_reader :all_actions
   @@all_actions = '*'

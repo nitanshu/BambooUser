@@ -20,5 +20,8 @@ BambooUser::Engine.routes.draw do
 
   get 'my-profile' => 'users#profile', as: 'my_profile'
 
+  get 'edit-profile' => 'users#edit_profile', as: 'edit_profile'
+  patch 'edit-profile' => 'users#edit_profile'
+
   resources :users
 end
