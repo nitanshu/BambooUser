@@ -61,7 +61,7 @@ To generate Signup form
             .
             .
             <%= ud_f.text_field :last_name %>
-        <%= end %>
+        <%end %>
         <%= f.submit 'Signup' %>
     <%end %>
 
@@ -96,7 +96,7 @@ To generate Profile edit form
             .
             .
             <%= ud_f.text_field :last_name %>
-        <%= end %>
+        <%end %>
         <%= f.submit 'Update' %>
     <%end %>
 
