@@ -27,6 +27,11 @@ module BambooUser
       form_for(@user, options, &block)
     end
 
+    def invitation_signup_form(options={}, &block)
+      options = options.merge(url: bamboo_user.invitation_sign_up_path)
+      form_for(:user, options, &block)
+    end
+
     def profile_form(options={}, &block)
       options = options.merge(url: bamboo_user.edit_profile_path)
       options = options.merge(multipart: true) if BambooUser.photofy_enabled
@@ -62,6 +67,11 @@ module BambooUser
           show_photo: true,
           show_extended: true}
       render(partial: 'bamboo_user/users/signup_form', locals: _default_options.merge(options))
+    end
+
+    def invitation_signup_snippet(options={})
+      _default_options = {show_label: true}
+      render(partial: 'bamboo_user/users/invitation_signup_form', locals: _default_options.merge(options))
     end
 
     def profile_edit_snippet

@@ -52,7 +52,7 @@ To generate Login form with default Forgot-password link and Signup link
 To generate Signup form
 
     <%=signup_form do |f| %>
-        <%= f.text_field :email %>
+        <%= f.email_field :email %>
         <%= f.password_field :password %>
         <%= f.password_field :password_confirmation %>
         <%= f.file_field :photo %>
@@ -63,6 +63,14 @@ To generate Signup form
             <%= ud_f.text_field :last_name %>
         <%end %>
         <%= f.submit 'Signup' %>
+    <%end %>
+
+
+To generate Invitation signup form
+
+    <%=invitation_signup_form do |f| %>
+        <%= f.email_field :email %>
+        <%= f.submit 'Invite' %>
     <%end %>
 
 
@@ -118,6 +126,11 @@ Default styled signup form (extended)
     <%=signup_extended_snippet %>
 
 
+Default styled invitation signup form
+
+    <%=invitation_signup_snippet %>
+
+
 Default styled forgot-password (reset password) form
 
     <%=reset_password_snippet %>
@@ -143,6 +156,13 @@ Default styled edit profile form (extended)
 After successful signup
 
     def BambooUser.after_registration_success_callback(options)
+        #user code
+    end
+
+
+After invitation based signup request has been placed with a valid new email
+
+    def BambooUser.after_request_invitation_signup_success_callback(options)
         #user code
     end
 
@@ -201,32 +221,40 @@ But to customize, there are few other options kept open. Add an initializer file
         BambooUser.after_signup_failed_path = 'main_app.some_defined_path_from_routes'
 
 
-9. In case if login screen needs to be different from the default login screen of engine then specify it (like this so that application can redirect to correct login screen in when logged-in user is not found). <em>(Default is <b>bamboo_user.login_path</b>)</em>
+9. To specify redirect path after (invitation based) signup(successfull) <em>(Default is <b>main_app.root_path</b>)</em>.
+        BambooUser.after_invitation_signup_path = 'main_app.some_defined_path_from_routes'
+
+
+10. To specify redirect path after (invitation based) signup failed <em>(Default is <b>bamboo_user.invitation_sign_up_path</b>)</em>.
+        BambooUser.after_invitation_signup_failed_path = 'main_app.some_defined_path_from_routes'
+
+
+11. In case if login screen needs to be different from the default login screen of engine then specify it (like this so that application can redirect to correct login screen in when logged-in user is not found). <em>(Default is <b>bamboo_user.login_path</b>)</em>
         BambooUser.login_screen_path = 'main_app.some_login_path_from_routes'
 
 
-10. To specify redirect path after(successfull) change-password <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
+12. To specify redirect path after(successfull) change-password <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
         BambooUser.after_change_password_path = 'main_app.some_defined_myprofile_path'
 
 
-11. To specify redirect path after failed change-password <em>(Default is <b>bamboo_user.change_password_path</b>)</em>.
+13. To specify redirect path after failed change-password <em>(Default is <b>bamboo_user.change_password_path</b>)</em>.
         BambooUser.after_change_password_failed_path = 'main_app.some_defined_change_password_path'
 
 
-12. To specify redirect path after(successfull) profile update <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
+14. To specify redirect path after(successfull) profile update <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
         BambooUser.after_profile_save_path = 'main_app.some_defined_myprofile_path'
 
 
-13. To specify redirect path after failed profile update <em>(Default is <b>bamboo_user.edit_profile_path</b>)</em>.
+15. To specify redirect path after failed profile update <em>(Default is <b>bamboo_user.edit_profile_path</b>)</em>.
         BambooUser.after_profile_save_failed_path = 'main_app.some_defined_edit_profile_path'
 
 
-14. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
+16. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
         BambooUser.owner_class_name = 'Account'
         BambooUser.owner_class_reverse_association = 'users'
 
 
-15. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
+17. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
         BambooUser.detail_attributes_to_not_delegate << ['details_attribute_1', 'details_attribute_2', 'details_attribute_3' ]
 
 

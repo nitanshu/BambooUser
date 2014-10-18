@@ -35,10 +35,18 @@ module BambooUser
                                                        }) if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
     end
 
-    def perform_reset_password!(user_params)
+    def request_invitation_signup!
+      BambooUser.after_request_invitation_signup_success_callback({
+                                                                      user: self,
+                                                                      invitation_signup_link: BambooUser::Engine.routes.url_helpers.make_password_to_signup_path(encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"))
+                                                                  }) if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
+    end
+
+    def perform_reset_password!(user_params, reset_for = 'password_recovery')
       s_user_params = user_params.keep_if { |k, v| %w(password password_confirmation).include?(k) }
       if self.update(s_user_params.merge(password_reset_token: nil, password_reset_sent_at: nil))
-        BambooUser.after_password_reset_confirmed_callback(self)
+        BambooUser.after_registration_success_callback({user: self}) if (reset_for == 'new_signup')
+        BambooUser.after_password_reset_confirmed_callback({user: self}) if (reset_for == 'password_recovery')
         return true
       end
       false

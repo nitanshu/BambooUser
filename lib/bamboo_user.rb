@@ -12,6 +12,12 @@ module BambooUser
     options
   end
 
+  def self.after_request_invitation_signup_success_callback(options)
+    puts 'This is a stub. Suggestion: Please re-define it to send invitation email to user or any such other activity'
+    puts "options: #{options.inspect}"
+    options
+  end
+
   def self.after_password_reset_request_callback(options)
     puts 'This is a stub. Suggestion: Please re-define it to send password reset link email or any such other activity'
     puts "options: #{options.inspect}"
@@ -58,6 +64,12 @@ module BambooUser
 
   mattr_accessor :after_signup_failed_path
   @@after_signup_failed_path = 'bamboo_user.sign_up_path'
+
+  mattr_accessor :after_invitation_signup_path
+  @@after_invitation_signup_path = 'main_app.root_path'
+
+  mattr_accessor :after_invitation_signup_failed_path
+  @@after_invitation_signup_failed_path = 'bamboo_user.invitation_sign_up_path'
 
   mattr_accessor :after_profile_save_path
   @@after_profile_save_path = 'bamboo_user.my_profile_path'

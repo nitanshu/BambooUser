@@ -15,6 +15,11 @@ BambooUser::Engine.routes.draw do
   get 'sign-up' => 'users#sign_up', as: 'sign_up'
   post 'sign-up' => 'users#sign_up'
 
+  get 'invitation-sign-up' => 'users#invitation_sign_up', as: 'invitation_sign_up'
+  post 'invitation-sign-up' => 'users#invitation_sign_up'
+
+  get 'make-password-to-signup/:encoded_params' => 'sessions#make_password', as: 'make_password_to_signup'
+
   get 'change-password' => 'users#change_password', as: 'change_password'
   post 'change-password' => 'users#change_password'
 

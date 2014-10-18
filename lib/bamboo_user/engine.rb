@@ -44,6 +44,7 @@ module BambooUser
           if request.format == "text/html" or request.content_type == "text/html"
             #request.path != "/users/sign_in" &&
             #request.path != "/users/sign_up" &&
+            #request.path != "/users/invitation_sign_up" &&
             #request.path != "/users/password/new" &&
             #request.path != "/users/password/edit" &&
             #request.path != "/users/confirmation" &&
@@ -51,7 +52,8 @@ module BambooUser
             session[:previous_url] = request.fullpath unless [bamboo_user.login_path,
                                                               bamboo_user.logout_path,
                                                               bamboo_user.reset_password_path,
-                                                              bamboo_user.sign_up_path].include?(request.path)
+                                                              bamboo_user.sign_up_path,
+                                                              bamboo_user.invitation_sign_up_path].include?(request.path)
           end
 
         end

@@ -3,8 +3,8 @@ require_dependency "bamboo_user/application_controller"
 module BambooUser
   class UsersController < ApplicationController
 
-    skip_before_filter :fetch_logged_user, only: [:sign_up]
-    before_filter :fetch_model_reflection, only: [:sign_up, :index, :show, :new, :create, :edit, :update, :destroy]
+    skip_before_filter :fetch_logged_user, only: [:sign_up, :invitation_sign_up]
+    before_filter :fetch_model_reflection, only: [:sign_up, :invitation_sign_up, :index, :show, :new, :create, :edit, :update, :destroy]
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
     def profile
@@ -41,6 +41,23 @@ module BambooUser
           redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path)) and return
         else
           redirect_to eval(BambooUser.after_signup_failed_path), notice: 'Failed to signup' and return
+        end
+      end
+      render layout: BambooUser.signup_screen_layout
+    end
+
+    def invitation_sign_up
+      @user = @model.new
+      if request.post?
+        @user = @model.new(user_params.merge(password: "ishouldn'thavebeenthepassword"))
+
+        if @user.save
+          @user.request_invitation_signup!
+
+          redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{@user.email}. Please check") and return
+        else
+          logger.info(@user.errors.inspect)
+          redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Invitation failed as user already exist!' and return
         end
       end
       render layout: BambooUser.signup_screen_layout

@@ -29,20 +29,37 @@ module BambooUser
       @user ||= @model.new
     end
 
+    def make_password
+      do_password_reset('new_signup')
+    end
+
     def validate_password_reset
+      do_password_reset(params[:for]||'password_recovery')
+    end
+
+    def do_password_reset(reset_for = 'password_recovery')
       _password_reset_token, @_email = Base64.urlsafe_decode64(params[:encoded_params]).try(:split, '||')
       @user = @model.find_by(email: @_email)
       if request.post?
         if (@user and @user.password_reset_token == _password_reset_token and ((Time.now - @user.password_reset_sent_at) <= 86400.0)) #reset-token shouldn't be more than 1 day(i.e 86400 seconds) old
-          if (not params[:user][:password].blank?) and @user.perform_reset_password!(user_params)
+          if (not params[:user][:password].blank?) and @user.perform_reset_password!(user_params, reset_for)
             session[:previous_url] = nil #Otherwise it may re-take back to reset_password page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
-            redirect_to(login_path, notice: 'New password created successfully. Please login with updated credentials here.') and return
+
+            if reset_for == 'password_recovery'
+              redirect_to(login_path, notice: 'New password created successfully. Please login with updated credentials here.') and return
+            elsif reset_for == 'new_signup'
+              session[:user] = @user.id
+              #cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
+
+              #BambooUser.after_registration_success_callback({user: @user}) #This thing is taken care from @user.perform_reset_password!
+              redirect_to((session[:previous_url] || eval(BambooUser.after_signup_path)), notice: 'Welcome') and return
+            end
           else
             logger.debug(@user.errors.inspect)
             flash[:notice] = 'Failed to update. Please recheck the password'
           end
         else
-          redirect_to(login_path, notice: 'Invalid password reset token in use or it is too old to be used.') and return
+            redirect_to(login_path, notice: 'Invalid password reset token in use or it is too old to be used.') and return
         end
       end
     end
