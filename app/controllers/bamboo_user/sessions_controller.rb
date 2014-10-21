@@ -2,7 +2,7 @@ require_dependency "bamboo_user/application_controller"
 
 module BambooUser
   class SessionsController < ApplicationController
-    skip_before_filter :fetch_logged_user, only: [:login, :reset_password, :validate_password_reset]
+    skip_before_filter :fetch_logged_user, only: [:login, :reset_password, :validate_password_reset, :make_password]
     before_filter :fetch_model_reflection
 
     def login
@@ -59,7 +59,7 @@ module BambooUser
             flash[:notice] = 'Failed to update. Please recheck the password'
           end
         else
-            redirect_to(login_path, notice: 'Invalid password reset token in use or it is too old to be used.') and return
+          redirect_to(login_path, notice: 'Invalid password reset token in use or it is too old to be used.') and return
         end
       end
     end
