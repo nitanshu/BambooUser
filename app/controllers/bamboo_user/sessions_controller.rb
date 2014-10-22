@@ -31,12 +31,12 @@ module BambooUser
 
     def make_password
       do_password_reset('new_signup')
-      render layout: BambooUser.signup_screen_layout
+      render(layout: BambooUser.signup_screen_layout) if request.get?
     end
 
     def validate_password_reset
       do_password_reset(params[:for]||'password_recovery')
-      render layout: BambooUser.signup_screen_layout
+      render(layout: BambooUser.signup_screen_layout) if request.get?
     end
 
     def do_password_reset(reset_for = 'password_recovery')
