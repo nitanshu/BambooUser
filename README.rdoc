@@ -209,6 +209,10 @@ But to customize, there are few other options kept open. Add an initializer file
         BambooUser.after_login_path = 'main_app.some_defined_path_from_routes'
 
 
+5.1 To always redirect to specified redirect path after login <em>(Default is <b>false</b>)</em>.
+        BambooUser.always_redirect_to_login_path = true
+
+
 6. To specify redirect path after logout <em>(Default is <b>main_app.root_path</b>)</em>.
         BambooUser.after_logout_path = 'main_app.some_defined_path_from_routes'
 

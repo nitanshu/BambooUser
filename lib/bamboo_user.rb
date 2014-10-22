@@ -47,6 +47,9 @@ module BambooUser
   mattr_accessor :detail_attributes_to_not_delegate
   @@detail_attributes_to_not_delegate = %w(id id= user_id user_id= created_at updated_at)
 
+  mattr_accessor :always_redirect_to_login_path
+  @@always_redirect_to_login_path = false
+
   mattr_accessor :owner_class_name
   @@owner_class_name = nil
 
