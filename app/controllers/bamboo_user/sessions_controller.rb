@@ -27,6 +27,7 @@ module BambooUser
         end
       end
       @user ||= @model.new
+      render(layout: BambooUser.signup_screen_layout) if request.get?
     end
 
     def make_password
