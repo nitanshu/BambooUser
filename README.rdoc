@@ -253,6 +253,8 @@ But to customize, there are few other options kept open. Add an initializer file
         BambooUser.owner_class_name = 'Account'
         BambooUser.owner_class_reverse_association = 'users'
 
+    Note: Add a method or variable named root_element(most probably in ApplicationController) which should return an instance of BambooUser.owner_class_name which should have a :has_one or :has_many association to 'BambooUser::User'
+
 
 17. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
         BambooUser.detail_attributes_to_not_delegate << ['details_attribute_1', 'details_attribute_2', 'details_attribute_3' ]
