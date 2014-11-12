@@ -22,9 +22,15 @@ module BambooUser
     end
 
     def signup_form(options={}, &block)
-      options = options.merge(url: bamboo_user.sign_up_path)
+      signup_form_for(@user, options, &block)
+    end
+
+    def signup_form_for(object, options={}, &block)
+      raise "InvalidActingObject" unless object.is_a?(BambooUser::User)
+
+      options = options.merge(url: bamboo_user.sign_up_path(class_type: object.class.name))
       options = options.merge(multipart: true) if BambooUser.photofy_enabled
-      form_for(@user, options, &block)
+      form_for(object, options, &block)
     end
 
     def invitation_signup_form(options={}, &block)

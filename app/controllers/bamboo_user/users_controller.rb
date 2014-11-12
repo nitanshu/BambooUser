@@ -32,7 +32,14 @@ module BambooUser
     def sign_up
       @user = @model.new
       if request.post?
-        @user = @model.new(user_params)
+        sti_class = params[:class_type]
+        @user = if sti_class.nil?
+                  @model.new(user_params)
+                elsif  BambooUser.valid_sti_class? and (sti_class.constantize < BambooUser::User)
+                  sti_class.constantize.new(user_params(sti_class.underscore.to_sym))
+                else
+                  raise "InvalidStiClass"
+                end
         if @user.save
           session[:user] = @user.id
           #cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
@@ -131,8 +138,8 @@ module BambooUser
     end
 
     # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation, :photo, user_detail_attributes: [*UserDetail.columns_hash.keys])
+    def user_params(required_class_type = :user)
+      params.require(required_class_type).permit(:email, :password, :password_confirmation, :photo, user_detail_attributes: [*UserDetail.columns_hash.keys])
     end
   end
 end

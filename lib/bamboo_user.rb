@@ -44,6 +44,16 @@ module BambooUser
     @@photofy_enabled = true
   end
 
+  def self.valid_sti_class?
+    (not sti_class_for_signup.nil?) and white_listed_sti_classes.include?(sti_class_for_signup)
+  end
+
+  mattr_accessor :white_listed_sti_classes
+  @@white_listed_sti_classes = []
+
+  mattr_accessor :sti_class_for_signup
+  @@sti_class_for_signup = nil # 'SomeClassDescendentOfBambooUser::User'
+
   mattr_accessor :detail_attributes_to_not_delegate
   @@detail_attributes_to_not_delegate = %w(id id= user_id user_id= created_at updated_at)
 

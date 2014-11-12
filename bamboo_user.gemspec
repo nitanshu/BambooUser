@@ -20,5 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 4.1.1"
   s.add_dependency 'bcrypt', '~> 3.1.7' # Use ActiveModel has_secure_password
   s.add_dependency 'rmagick', '~> 2.13.3'
-  s.add_dependency 'photofy', '~> 0.2.2'
+  s.add_dependency 'photofy', '~> 0.3.1'
 end

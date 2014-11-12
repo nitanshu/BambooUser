@@ -27,7 +27,19 @@ module BambooUser
     end
 
     def fetch_model_reflection
-      @model = BambooUser.owner_available? ? root_owner_reflection : User
+      @model = if BambooUser.owner_available? #TODO: Need to implement STI over root_element driven user too
+                 root_owner_reflection
+               else
+                 if BambooUser.sti_class_for_signup.nil?
+                   User
+                 else
+                   if BambooUser.valid_sti_class? and (BambooUser.sti_class_for_signup.constantize < BambooUser::User)
+                     BambooUser.sti_class_for_signup.constantize
+                   else
+                     raise 'InvalidStiClassForSignup'
+                   end
+                 end
+               end
     end
 
   end

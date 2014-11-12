@@ -66,6 +66,24 @@ To generate Signup form
     <%end %>
 
 
+To generate Signup form for STI classes (of BambooUser::User class).
+(For this to work, one need to have proper setup of white_listed_sti_classes and sti_class_for_signup attributes)
+
+    <%=signup_form_for(StiClass.new) do |f| %>
+        <%= f.email_field :email %>
+        <%= f.password_field :password %>
+        <%= f.password_field :password_confirmation %>
+        <%= f.file_field :photo %>
+        <%= f.fields_for :user_detail do |ud_f| %>
+            <%= ud_f.text_field :first_name %>
+            .
+            .
+            <%= ud_f.text_field :last_name %>
+        <%end %>
+        <%= f.submit 'Signup' %>
+    <%end %>
+
+
 To generate Invitation signup form
 
     <%=invitation_signup_form do |f| %>
@@ -262,6 +280,14 @@ But to customize, there are few other options kept open. Add an initializer file
 
 17. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
         BambooUser.detail_attributes_to_not_delegate << ['details_attribute_1', 'details_attribute_2', 'details_attribute_3' ]
+
+
+18. In situation where STI's of BambooUser::User class is being used for signup, as a secuirty measure provide a white list of class names <em>(Default is <b>[]</b>)</em>.
+        BambooUser.white_listed_sti_classes = ['SomeClassDescendentOfUser', 'SomeOtherClassDescendentOfUser']
+
+
+19. In situation where STI's of BambooUser::User class is being used for signup and want to use one of the sti class object in system's default signup form <em>(Default is <b>nil</b>)</em>..
+        BambooUser.sti_class_for_signup = 'SomeClassDescendentOfUser'
 
 
 == Add on facility
