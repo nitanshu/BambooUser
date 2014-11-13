@@ -34,8 +34,12 @@ module BambooUser
     end
 
     def invitation_signup_form(options={}, &block)
+      invitation_signup_form_for(@user, options={}, &block)
+    end
+
+    def invitation_signup_form_for(object, options={}, &block)
       options = options.merge(url: bamboo_user.invitation_sign_up_path)
-      form_for(:user, options, &block)
+      form_for(object, options, &block)
     end
 
     def profile_form(options={}, &block)

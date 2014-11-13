@@ -33,11 +33,12 @@ module BambooUser
       @user = @model.new
       if request.post?
         sti_class = params[:class_type]
+        class_sym = @model.name.underscore.to_sym
         @user = if sti_class.nil?
                   @model.new(user_params)
                 elsif  BambooUser.valid_sti_class? and (sti_class.constantize < BambooUser::User)
                   session[:previous_url] = nil #Otherwise it may re-take back to reset_password page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
-                  sti_class.constantize.new(user_params(sti_class.underscore.to_sym))
+                  sti_class.constantize.new(user_params(class_sym))
                 else
                   raise "InvalidStiClass"
                 end
@@ -54,11 +55,12 @@ module BambooUser
       render layout: BambooUser.signup_screen_layout
     end
 
-    #TODO: STI addition (as in normal signup) is pending
     def invitation_sign_up
       @user = @model.new
+      session[:previous_url] = nil #Otherwise it may re-take back to invitation_sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
       if request.post?
-        @user = @model.new(user_params.merge(password: "ishouldn'thavebeenthepassword"))
+        class_sym = @model.name.underscore.to_sym
+        @user = @model.new(user_params(class_sym).merge(password: "ishouldn'thavebeenthepassword"))
 
         if @user.save
           @user.request_invitation_signup!

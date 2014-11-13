@@ -92,6 +92,15 @@ To generate Invitation signup form
     <%end %>
 
 
+To generate Invitation signup form for STI classes (of BambooUser::User class).
+(For this to work, one need to have proper setup of white_listed_sti_classes and sti_class_for_signup attributes)
+
+    <%=invitation_signup_form_for(StiClass.new) do |f| %>
+        <%= f.email_field :email %>
+        <%= f.submit 'Invite' %>
+    <%end %>
+
+
 To generate Forgot-password form
 
     <%=reset_password_form do |f| %>
