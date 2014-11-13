@@ -18,12 +18,14 @@ module BambooUser
 
     def reset_password
       if request.post?
-        @user = @model.find_by(email: params[:user][:email])
+        class_sym = @model.name.underscore.to_sym
+
+        @user = @model.find_by(email: params[@model.name.underscore.to_sym][:email])
         if (@user)
           @user.request_reset_password!
           redirect_to(login_path, notice: 'An email with password reset link has been sent to registered email address. Please check') and return
         else
-          flash[:notice] = "No registered user found with email '#{params[:user][:email]}'."
+          flash[:notice] = "No registered user found with email '#{params[class_sym][:email]}'."
         end
       end
       @user ||= @model.new
@@ -42,10 +44,12 @@ module BambooUser
 
     def do_password_reset(reset_for = 'password_recovery')
       _password_reset_token, @_email = Base64.urlsafe_decode64(params[:encoded_params]).try(:split, '||')
+      class_sym = @model.name.underscore.to_sym
+
       @user = @model.find_by(email: @_email)
       if request.post?
         if (@user and @user.password_reset_token == _password_reset_token and ((Time.now - @user.password_reset_sent_at) <= 86400.0)) #reset-token shouldn't be more than 1 day(i.e 86400 seconds) old
-          if (not params[:user][:password].blank?) and @user.perform_reset_password!(user_params, reset_for)
+          if (not params[class_sym][:password].blank?) and @user.perform_reset_password!(user_params(class_sym), reset_for)
             session[:previous_url] = nil #Otherwise it may re-take back to reset_password page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
 
             if reset_for == 'password_recovery'
@@ -74,8 +78,8 @@ module BambooUser
     end
 
     private
-    def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation)
+    def user_params(required_class_type = :user)
+      params.require(required_class_type).permit(:email, :password, :password_confirmation)
     end
   end
 end
