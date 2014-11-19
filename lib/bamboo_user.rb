@@ -66,6 +66,9 @@ module BambooUser
   mattr_accessor :owner_class_reverse_association
   @@owner_class_reverse_association = nil
 
+  mattr_accessor :custom_signup_path
+  @@custom_signup_path = nil
+
   mattr_accessor :login_screen_path
   @@login_screen_path = 'bamboo_user.login_path'
 

@@ -39,7 +39,7 @@
   <% if show_signup_link %>
       <div class="row signup">
         <div class="col">
-          <%= link_to('Signup', bamboo_user.sign_up_path(class_type: BambooUser.sti_class_for_signup)) %>
+          <%= link_to('Signup', BambooUser.custom_signup_path.nil? ? bamboo_user.sign_up_path(class_type: BambooUser.sti_class_for_signup) : eval(BambooUser.custom_signup_path)) %>
         </div>
         <div class="clearfix"></div>
       </div>

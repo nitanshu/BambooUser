@@ -232,70 +232,74 @@ But to customize, there are few other options kept open. Add an initializer file
         BambooUser.profile_screen_layout = 'some_layout'
 
 
-5.  To specify redirect path after login <em>(Default is <b>main_app.root_path</b>)</em>.
+5.  In case if custom signup is available then it needs to be specified here to be updated in signup link at login form <em>(Default is <b>nil</b>)</em>.
+        BambooUser.custom_signup_path = 'main_app.some_defined_signup_path_from_routes'
+
+
+6.  To specify redirect path after login <em>(Default is <b>main_app.root_path</b>)</em>.
         BambooUser.after_login_path = 'main_app.some_defined_path_from_routes'
 
 
-6.  To always redirect to specified redirect path after login <em>(Default is <b>false</b>)</em>.
+7.  To always redirect to specified redirect path after login <em>(Default is <b>false</b>)</em>.
         BambooUser.always_redirect_to_login_path = true
 
 
-7.  To specify redirect path after logout <em>(Default is <b>main_app.root_path</b>)</em>.
+8.  To specify redirect path after logout <em>(Default is <b>main_app.root_path</b>)</em>.
         BambooUser.after_logout_path = 'main_app.some_defined_path_from_routes'
 
 
-8.  To specify redirect path after signup(successfull) <em>(Default is <b>main_app.root_path</b>)</em>.
+9.  To specify redirect path after signup(successfull) <em>(Default is <b>main_app.root_path</b>)</em>.
         BambooUser.after_signup_path = 'main_app.some_defined_path_from_routes'
 
 
-9.  To specify redirect path after signup failed <em>(Default is <b>bamboo_user.sign_up_path</b>)</em>.
+10.  To specify redirect path after signup failed <em>(Default is <b>bamboo_user.sign_up_path</b>)</em>.
         BambooUser.after_signup_failed_path = 'main_app.some_defined_path_from_routes'
 
 
-10.  To specify redirect path after (invitation based) signup(successfull) <em>(Default is <b>main_app.root_path</b>)</em>.
+11.  To specify redirect path after (invitation based) signup(successfull) <em>(Default is <b>main_app.root_path</b>)</em>.
         BambooUser.after_invitation_signup_path = 'main_app.some_defined_path_from_routes'
 
 
-11. To specify redirect path after (invitation based) signup failed <em>(Default is <b>bamboo_user.invitation_sign_up_path</b>)</em>.
+12. To specify redirect path after (invitation based) signup failed <em>(Default is <b>bamboo_user.invitation_sign_up_path</b>)</em>.
         BambooUser.after_invitation_signup_failed_path = 'main_app.some_defined_path_from_routes'
 
 
-12. In case if login screen needs to be different from the default login screen of engine then specify it (like this so that application can redirect to correct login screen in when logged-in user is not found). <em>(Default is <b>bamboo_user.login_path</b>)</em>
+13. In case if login screen needs to be different from the default login screen of engine then specify it (like this so that application can redirect to correct login screen in when logged-in user is not found). <em>(Default is <b>bamboo_user.login_path</b>)</em>
         BambooUser.login_screen_path = 'main_app.some_login_path_from_routes'
 
 
-13. To specify redirect path after(successfull) change-password <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
+14. To specify redirect path after(successfull) change-password <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
         BambooUser.after_change_password_path = 'main_app.some_defined_myprofile_path'
 
 
-14. To specify redirect path after failed change-password <em>(Default is <b>bamboo_user.change_password_path</b>)</em>.
+15. To specify redirect path after failed change-password <em>(Default is <b>bamboo_user.change_password_path</b>)</em>.
         BambooUser.after_change_password_failed_path = 'main_app.some_defined_change_password_path'
 
 
-15. To specify redirect path after(successfull) profile update <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
+16. To specify redirect path after(successfull) profile update <em>(Default is <b>bamboo_user.my_profile_path</b>)</em>.
         BambooUser.after_profile_save_path = 'main_app.some_defined_myprofile_path'
 
 
-16. To specify redirect path after failed profile update <em>(Default is <b>bamboo_user.edit_profile_path</b>)</em>.
+17. To specify redirect path after failed profile update <em>(Default is <b>bamboo_user.edit_profile_path</b>)</em>.
         BambooUser.after_profile_save_failed_path = 'main_app.some_defined_edit_profile_path'
 
 
-17. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
+18. For scenario, in which users are not root level elements in those cases user need to be child of some other model instance. To accommodate users from other model, following settings needs to be updated.
         BambooUser.owner_class_name = 'Account'
         BambooUser.owner_class_reverse_association = 'users'
 
     Note: Add a method or variable named root_element(most probably in ApplicationController) which should return an instance of BambooUser.owner_class_name which should have a :has_one or :has_many association to 'BambooUser::User'
 
 
-18. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
+19. By default a model UserDetail is also made available to accommodate varied attributes requirements (of application), whose all attributes (except a few like <em>id, user_id, created_at, updated_at</em>) are available delegated to BambooUser::User model. If any other attributes needs to be ignored from delegation then specify them like this.
         BambooUser.detail_attributes_to_not_delegate << ['details_attribute_1', 'details_attribute_2', 'details_attribute_3' ]
 
 
-19. In situation where STI's of BambooUser::User class is being used for signup, as a secuirty measure provide a white list of class names <em>(Default is <b>[]</b>)</em>.
+20. In situation where STI's of BambooUser::User class is being used for signup, as a secuirty measure provide a white list of class names <em>(Default is <b>[]</b>)</em>.
         BambooUser.white_listed_sti_classes = ['SomeClassDescendentOfUser', 'SomeOtherClassDescendentOfUser']
 
 
-20. In situation where STI's of BambooUser::User class is being used for signup and want to use one of the sti class object in system's default signup form <em>(Default is <b>nil</b>)</em>..
+21. In situation where STI's of BambooUser::User class is being used for signup and want to use one of the sti class object in system's default signup form <em>(Default is <b>nil</b>)</em>..
         BambooUser.sti_class_for_signup = 'SomeClassDescendentOfUser'
 
 
