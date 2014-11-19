@@ -14,7 +14,8 @@ module BambooUser
     def edit_profile
       @user = logged_user
       if request.patch?
-        if @user.update(user_params)
+        class_sym = @model.name.underscore.to_sym
+        if @user.update(user_params(class_sym))
           redirect_to eval(BambooUser.after_profile_save_path) and return
         else
           logger.info @user.errors.inspect
