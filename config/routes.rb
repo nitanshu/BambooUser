@@ -28,5 +28,5 @@ BambooUser::Engine.routes.draw do
   get 'edit-profile' => 'users#edit_profile', as: 'edit_profile'
   patch 'edit-profile' => 'users#edit_profile'
 
-  resources :users
+  # resources :users
 end
