@@ -100,7 +100,10 @@ module BambooUser
       _default_options = {
           show_label: true,
           show_photo: true,
-          show_extended: true}
+          show_extended: true,
+          instructions: true,
+          instruction_message: 'Please enter your details below.'
+      }
       render(partial: 'bamboo_user/users/profile_form', locals: _default_options.merge(options))
     end
 

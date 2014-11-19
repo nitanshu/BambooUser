@@ -15,7 +15,9 @@ module BambooUser
       @user = logged_user
       if request.patch?
         class_sym = @model.name.underscore.to_sym
-        if @user.update(user_params(class_sym))
+        _user_params = user_params(class_sym).clone
+        _user_params.delete(:email)
+        if @user.update(_user_params)
           redirect_to eval(BambooUser.after_profile_save_path) and return
         else
           logger.info @user.errors.inspect
