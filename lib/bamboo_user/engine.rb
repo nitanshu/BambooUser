@@ -49,11 +49,13 @@ module BambooUser
             #request.path != "/users/password/edit" &&
             #request.path != "/users/confirmation" &&
             #request.path != "/users/sign_out"
-            session[:previous_url] = request.fullpath unless [bamboo_user.login_path,
-                                                              bamboo_user.logout_path,
-                                                              bamboo_user.reset_password_path,
-                                                              bamboo_user.sign_up_path,
-                                                              bamboo_user.invitation_sign_up_path].include?(request.path)
+            session[:previous_url] = request.fullpath unless [
+                bamboo_user.login_path,
+                bamboo_user.logout_path,
+                bamboo_user.reset_password_path,
+                bamboo_user.invitation_sign_up_path,
+                (BambooUser.custom_signup_path.nil? ? bamboo_user.sign_up_path : eval(BambooUser.custom_signup_path))
+            ].compact.include?(request.path)
           end
 
         end
