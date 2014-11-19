@@ -1,4 +1,4 @@
-<div class="form signup_form">
+<div class="form edit_profile_form">
   <%= profile_form do |f| %>
       <% if @user.errors.any? %>
           <div id="error_explanation">
@@ -23,7 +23,7 @@
             <% if show_label %>
                 <div class="col lbl"><%= f.label :photo %></div>
             <% end %>
-            <div class="col"><%= f.file_field :photo %></div>
+            <div class="col"><%= f.file_field :photo, title: 'Photo'.humanize %></div>
             <div class="clearfix"></div>
           </div>
       <% end %>
@@ -35,7 +35,7 @@
                         <% if show_label %>
                             <div class="col lbl"><%= ud_f.label key %></div>
                         <% end %>
-                        <div class="col"><%= ud_f.public_send(column_type_to_field[value.type.to_s], key) %></div>
+                        <div class="col"><%= ud_f.public_send(column_type_to_field[value.type.to_s], key, title: key.humanize) %></div>
                         <div class="clearfix"></div>
                       </div>
                   <% end %>
