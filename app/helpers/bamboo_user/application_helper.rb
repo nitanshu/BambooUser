@@ -61,7 +61,10 @@ module BambooUser
           show_label: true,
           show_forgot_password: true,
           show_remember_me: true,
-          show_signup_link: true}
+          show_signup_link: true,
+          instructions: true,
+          instruction_message: ''
+      }
       render(partial: 'bamboo_user/sessions/login_form', locals: _default_options.merge(options))
     end
 
@@ -75,7 +78,10 @@ module BambooUser
       _default_options = {
           show_label: true,
           show_photo: true,
-          show_extended: true}
+          show_extended: true,
+          instructions: true,
+          instruction_message: ''
+      }
       render(partial: 'bamboo_user/users/signup_form', locals: _default_options.merge(options))
     end
 

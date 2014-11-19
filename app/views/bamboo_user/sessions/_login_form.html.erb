@@ -1,4 +1,9 @@
 <div class="form login_form">
+  <% if instructions %>
+      <h1>Login</h1>
+      <%= raw("<p>#{instruction_message}</p>") unless instruction_message.blank? %>
+  <% end %>
+
   <%= login_form do |f| %>
       <div class="row">
         <% if show_label %>

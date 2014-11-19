@@ -1,4 +1,9 @@
 <div class="form signup_form">
+  <% if instructions %>
+      <h1>Signup</h1>
+      <%= raw("<p>#{instruction_message}</p>") unless instruction_message.blank? %>
+  <% end %>
+
   <%= signup_form do |f| %>
       <% if @user.errors.any? %>
           <div id="error_explanation">
