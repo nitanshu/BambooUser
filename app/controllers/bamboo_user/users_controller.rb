@@ -4,7 +4,7 @@ module BambooUser
   class UsersController < ApplicationController
 
     skip_before_filter :fetch_logged_user, only: [:sign_up, :invitation_sign_up]
-    before_filter :fetch_model_reflection, only: [:sign_up, :invitation_sign_up, :index, :show, :new, :create, :edit, :update, :destroy]
+    before_filter :fetch_model_reflection, only: [:sign_up, :invitation_sign_up, :edit_profile, :index, :show, :new, :create, :edit, :update, :destroy]
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
     def profile
