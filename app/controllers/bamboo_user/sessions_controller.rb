@@ -10,7 +10,7 @@ module BambooUser
         if (user = @model.find_by(email: params[:user][:email]).try(:authenticate, params[:user][:password]))
           session[:user] = user.id
           cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
-          redirect_to BambooUser.always_redirect_to_login_path ? eval(BambooUser.after_login_path) : (session[:previous_url] || eval(BambooUser.after_login_path)) and return
+          redirect_to((BambooUser.always_redirect_to_login_path ? eval(BambooUser.after_login_path) : (session[:previous_url] || eval(BambooUser.after_login_path))), notice: "Invalid credentials in use.") and return
         end
       end
       render layout: BambooUser.login_screen_layout
