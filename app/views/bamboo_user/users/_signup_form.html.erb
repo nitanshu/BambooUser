@@ -54,7 +54,13 @@
                         <% if show_label %>
                             <div class="col lbl"><%= ud_f.label key %></div>
                         <% end %>
-                        <div class="col"><%= ud_f.public_send(column_type_to_field[value.type.to_s], key) %></div>
+                        <div class="col">
+                          <% if  f.object.try("select_options_for_#{key}").is_a?(Array) %>
+                              <%= ud_f.select(key, options_for_select(f.object.try("select_options_for_#{key}"), f.object.send(key)), title: key.humanize) %>
+                          <% else %>
+                              <%= ud_f.public_send(column_type_to_field[value.type.to_s], key, title: key.humanize) %>
+                          <% end %>
+                        </div>
                         <div class="clearfix"></div>
                       </div>
                   <% end %>
