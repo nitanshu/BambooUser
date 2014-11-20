@@ -308,7 +308,7 @@ But to customize, there are few other options kept open. Add an initializer file
 1.  BambooUser engine comes equipped with photofy gem( https://github.com/praveenkumarsinha/Photofy ) and also have a photofy field <b>photo</b> by default available. To add more photofy fields or override default, specify it like this
 
     BambooUser.add_photofy do |user_class|
-        user_class.photofy :collage
+      user_class.photofy :collage
     end
 
 
@@ -316,7 +316,7 @@ But to customize, there are few other options kept open. Add an initializer file
     To render select field for 'year' field add an instance method to BambooUser::User or its STI classes
 
     def select_options_for_year
-        [2012, 2013, 2014, 2015, 2016].collect { |x| ["Year #{x}", x] }
+      [2012, 2013, 2014, 2015, 2016].collect { |x| ["Year #{x}", x] }
     end
 
 
