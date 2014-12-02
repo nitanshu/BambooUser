@@ -50,9 +50,9 @@ module BambooUser
           #cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
 
           BambooUser.after_registration_success_callback({user: @user})
-          redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path)) and return
+          signup_success_handler and return
         else
-          redirect_to eval(BambooUser.after_signup_failed_path), notice: 'Failed to sign up' and return
+          signup_failure_handler and return
         end
       end
       render layout: BambooUser.signup_screen_layout
