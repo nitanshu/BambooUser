@@ -63,15 +63,15 @@ module BambooUser
       session[:previous_url] = nil #Otherwise it may re-take back to invitation_sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
       if request.post?
         class_sym = @model.name.underscore.to_sym
-        @user = @model.new(user_params(class_sym).merge(password: "ishouldn'thavebeenthepassword"))
+        @user, status = @model.find_or_create_invited_by_email(user_params(class_sym))
 
-        if @user.save
-          @user.request_invitation_signup!
-
-          redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{@user.email}. Please check") and return
-        else
+        if status == 'found'
+          redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'User already exist' and return
+        elsif status == 'creation_failed'
           logger.info(@user.errors.inspect)
-          redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Invitation failed as user already exist!' and return
+          redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Some error occurred. Please contact administrator.' and return
+        elsif status == 'created'
+          redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{@user.email}. Please check") and return
         end
       end
       render layout: BambooUser.signup_screen_layout

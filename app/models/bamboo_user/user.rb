@@ -52,6 +52,20 @@ module BambooUser
       false
     end
 
+    def self.find_or_create_invited_by_email(params={}, send_invitation = true)
+      params.stringify_keys!
+      raise "EmailRequired" unless  params.include?('email')
+
+      _self = where(email: params['email']).first
+      if _self.nil?
+        _new_user = new(params.merge(password: "ishouldn'thavebeenthepassword"))
+        _new_user.request_invitation_signup! if (_new_user_save_flag = _new_user.save) and send_invitation
+        [_new_user, (_new_user_save_flag ? 'created' : 'creation_failed')]
+      else
+        [_self, 'found']
+      end
+    end
+
     private
     def provision_user_detail
       if self.user_detail.nil?
