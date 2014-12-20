@@ -10,6 +10,10 @@ module BambooUser
         if (user = @model.find_by(email: params[:user][:email]).try(:authenticate, params[:user][:password]))
           session[:user] = user.id
           cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
+
+          _return = self.class.process_after_login_callbacks(self)
+          return _return if _return == false
+
           redirect_to((BambooUser.always_redirect_to_login_path ? eval(BambooUser.after_login_path) : (session[:previous_url] || eval(BambooUser.after_login_path)))) and return
         end
       end

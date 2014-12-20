@@ -208,6 +208,14 @@ After user visit and validates correct password-reset link (may be sent over ema
     end
 
 
+Filter(callback) after login. Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
+
+    after_login do
+        #user code
+    end
+    after_login :some_method_1_to_call, :some_method_2_to_call
+
+
 == Customizations
 
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.

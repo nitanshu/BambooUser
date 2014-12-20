@@ -118,4 +118,5 @@ module BambooUser
   @@public_paths = {controller_name_1: [all_actions], controller_name_2: [:action_1, :action_2, :action_3]}
 end
 
+require "bamboo_user/filter"
 require "bamboo_user/engine"

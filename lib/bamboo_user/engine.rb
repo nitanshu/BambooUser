@@ -6,6 +6,10 @@ module BambooUser
   end
 
   class Railtie < ::Rails::Railtie
+    initializer "bamboo_users.setting_filters" do
+      ActionController::Base.send :extend, BambooUser::Filter
+    end
+
     initializer "bamboo_users.settings_filters" do
       ActionController::Base.class_eval do
 
