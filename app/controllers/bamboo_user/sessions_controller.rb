@@ -3,7 +3,8 @@ require_dependency "bamboo_user/application_controller"
 module BambooUser
   class SessionsController < ApplicationController
     skip_before_filter :fetch_logged_user, only: [:login, :reset_password, :validate_password_reset, :make_password]
-    before_filter :fetch_model_reflection
+    before_filter :fetch_model_reflection, except: [:login]
+    before_filter :fetch_model_reflection_lite, only: [:login]
 
     def login
       if request.post?

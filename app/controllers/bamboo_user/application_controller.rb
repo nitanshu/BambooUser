@@ -42,5 +42,12 @@ module BambooUser
                end
     end
 
+    def fetch_model_reflection_lite
+      @model = if BambooUser.owner_available? #TODO: Need to implement STI over root_element driven user too
+                 root_owner_reflection
+               else
+                 User
+               end
+    end
   end
 end
