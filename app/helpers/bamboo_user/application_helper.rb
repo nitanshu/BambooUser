@@ -18,7 +18,14 @@ module BambooUser
     end
 
     def login_form(options={}, &block)
-      form_for(:user, options.merge(url: bamboo_user.login_path), &block)
+      login_form_for(@user, options={}, &block)
+    end
+
+    def login_form_for(object, options={}, &block)
+      raise "InvalidActingObject" unless object.is_a?(BambooUser::User)
+
+      options = options.merge(url: bamboo_user.login_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[object.class.name]))
+      form_for(object, options, &block)
     end
 
     def signup_form(options={}, &block)
@@ -28,7 +35,7 @@ module BambooUser
     def signup_form_for(object, options={}, &block)
       raise "InvalidActingObject" unless object.is_a?(BambooUser::User)
 
-      options = options.merge(url: bamboo_user.sign_up_path(class_type: object.class.name))
+      options = options.merge(url: bamboo_user.sign_up_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[object.class.name]))
       options = options.merge(multipart: true) if BambooUser.photofy_enabled
       form_for(object, options, &block)
     end
@@ -38,7 +45,9 @@ module BambooUser
     end
 
     def invitation_signup_form_for(object, options={}, &block)
-      options = options.merge(url: bamboo_user.invitation_sign_up_path)
+      raise "InvalidActingObject" unless object.is_a?(BambooUser::User)
+
+      options = options.merge(url: bamboo_user.invitation_sign_up_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[object.class.name]))
       form_for(object, options, &block)
     end
 
@@ -49,7 +58,14 @@ module BambooUser
     end
 
     def reset_password_form(options={}, &block)
-      form_for(@user, options.merge(url: bamboo_user.reset_password_path), &block)
+      reset_password_form_for(@user, options={}, &block)
+    end
+
+    def reset_password_form_for(object, options={}, &block)
+      raise "InvalidActingObject" unless object.is_a?(BambooUser::User)
+
+      options = options.merge(url: bamboo_user.reset_password_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[object.class.name]))
+      form_for(object, options, &block)
     end
 
     def change_password_form(options={}, &block)

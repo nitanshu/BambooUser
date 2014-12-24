@@ -3,8 +3,7 @@ require_dependency "bamboo_user/application_controller"
 module BambooUser
   class SessionsController < ApplicationController
     skip_before_filter :fetch_logged_user, only: [:login, :reset_password, :validate_password_reset, :make_password]
-    before_filter :fetch_model_reflection, except: [:login]
-    before_filter :fetch_model_reflection_lite, only: [:login]
+    before_filter :fetch_model_reflection
 
     after_login :default_redirect_after_login
 
@@ -13,8 +12,10 @@ module BambooUser
     end
 
     def login
+      @user = @model.new
       if request.post?
-        if (user = @model.find_by(email: params[:user][:email]).try(:authenticate, params[:user][:password]))
+        class_sym = ((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym)
+        if (user = @model.find_by(email: params[class_sym][:email]).try(:authenticate, params[class_sym][:password]))
           session[:user] = user.id
           cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
 
@@ -26,12 +27,12 @@ module BambooUser
 
     def reset_password
       if request.post?
-        class_sym = @model.name.underscore.to_sym
+        class_sym = ((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym)
 
-        @user = @model.find_by(email: params[@model.name.underscore.to_sym][:email])
+        @user = @model.find_by(email: params[class_sym][:email])
         if (@user)
           @user.request_reset_password!
-          redirect_to(login_path, notice: 'An email with password reset link has been sent to registered email address. Please check') and return
+          redirect_to(login_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[@user.class.name]), notice: 'An email with password reset link has been sent to registered email address. Please check') and return
         else
           flash[:notice] = "No registered user found with email '#{params[class_sym][:email]}'."
         end
@@ -52,8 +53,7 @@ module BambooUser
 
     def do_password_reset(reset_for = 'password_recovery')
       _password_reset_token, @_email = Base64.urlsafe_decode64(params[:encoded_params]).try(:split, '||')
-      class_sym = @model.name.underscore.to_sym
-
+      class_sym = ((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym)
       @user = @model.find_by(email: @_email)
       if request.post?
         if (@user and @user.password_reset_token == _password_reset_token and ((Time.now - @user.password_reset_sent_at) <= 86400.0)) #reset-token shouldn't be more than 1 day(i.e 86400 seconds) old

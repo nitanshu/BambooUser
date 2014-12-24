@@ -35,20 +35,11 @@ module BambooUser
     def sign_up
       @user = @model.new
       if request.post?
-        sti_class = params[:class_type]
-        class_sym = @model.name.underscore.to_sym
-        @user = if sti_class.nil?
-                  @model.new(user_params)
-                elsif  BambooUser.valid_sti_class? and (sti_class.constantize < BambooUser::User)
-                  session[:previous_url] = nil #Otherwise it may re-take back to reset_password page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
-                  sti_class.constantize.new(user_params(class_sym))
-                else
-                  raise "InvalidStiClass"
-                end
+        @user = @model.new(user_params((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym))
         if @user.save
-          session[:user] = @user.id
-          #cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
-
+          session[:user] = @user.id if BambooUser.auto_login_after_signup
+          session[:previous_url] = nil #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
+          #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
           BambooUser.after_registration_success_callback({user: @user})
           signup_success_handler and return
         else
@@ -62,8 +53,7 @@ module BambooUser
       @user = @model.new
       session[:previous_url] = nil #Otherwise it may re-take back to invitation_sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
       if request.post?
-        class_sym = @model.name.underscore.to_sym
-        @user, status = @model.find_or_create_invited_by_email(user_params(class_sym))
+        @user, status = @model.find_or_create_invited_by_email(user_params((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym))
 
         if status == 'found'
           redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'User already exist' and return

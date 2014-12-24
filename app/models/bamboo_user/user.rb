@@ -31,14 +31,18 @@ module BambooUser
     def request_reset_password!
       BambooUser.after_password_reset_request_callback({
                                                            user: self,
-                                                           password_reset_link: BambooUser::Engine.routes.url_helpers.validate_password_reset_path(encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"))
+                                                           password_reset_link: BambooUser::Engine.routes.url_helpers.validate_password_reset_path(
+                                                               encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"),
+                                                               sti_identifier: BambooUser.white_listed_sti_classes.invert[self.class.name])
                                                        }) if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
     end
 
     def request_invitation_signup!
       BambooUser.after_request_invitation_signup_success_callback({
                                                                       user: self,
-                                                                      invitation_signup_link: BambooUser::Engine.routes.url_helpers.make_password_to_signup_path(encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"))
+                                                                      invitation_signup_link: BambooUser::Engine.routes.url_helpers.make_password_to_signup_path(
+                                                                          encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"),
+                                                                          sti_identifier: BambooUser.white_listed_sti_classes.invert[self.class.name])
                                                                   }) if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
     end
 

@@ -49,10 +49,7 @@ module BambooUser
   end
 
   mattr_accessor :white_listed_sti_classes
-  @@white_listed_sti_classes = []
-
-  mattr_accessor :sti_class_for_signup
-  @@sti_class_for_signup = nil # 'SomeClassDescendentOfBambooUser::User'
+  @@white_listed_sti_classes = {} #Hash with url_identifier as key and class name as value like {'student' => 'Student', 'teacher' => 'Teacher'}
 
   mattr_accessor :detail_attributes_to_not_delegate
   @@detail_attributes_to_not_delegate = %w(id id= user_id user_id= created_at updated_at)
@@ -65,6 +62,9 @@ module BambooUser
 
   mattr_accessor :owner_class_reverse_association
   @@owner_class_reverse_association = nil
+
+  mattr_accessor :auto_login_after_signup
+  @@auto_login_after_signup = true
 
   mattr_accessor :custom_signup_path
   @@custom_signup_path = nil

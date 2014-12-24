@@ -29,24 +29,20 @@ module BambooUser
     def fetch_model_reflection
       @model = if BambooUser.owner_available? #TODO: Need to implement STI over root_element driven user too
                  root_owner_reflection
+               elsif params[:sti_identifier].nil?
+                 User
                else
-                 if BambooUser.sti_class_for_signup.nil?
-                   User
+                 _class_name = BambooUser.white_listed_sti_classes[params[:sti_identifier]]
+                 if _class_name.nil?
+                   raise 'InvalidStiClass'
                  else
-                   if BambooUser.valid_sti_class? and (BambooUser.sti_class_for_signup.constantize < BambooUser::User)
-                     BambooUser.sti_class_for_signup.constantize
+                   _class = _class_name.constantize
+                   if BambooUser::User.descendants.include?(_class)
+                     _class
                    else
-                     raise 'InvalidStiClassForSignup'
+                     raise 'InvalidStiClass'
                    end
                  end
-               end
-    end
-
-    def fetch_model_reflection_lite
-      @model = if BambooUser.owner_available? #TODO: Need to implement STI over root_element driven user too
-                 root_owner_reflection
-               else
-                 User
                end
     end
   end

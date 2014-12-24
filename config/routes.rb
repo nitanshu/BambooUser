@@ -1,24 +1,24 @@
 BambooUser::Engine.routes.draw do
   root 'users#profile'
 
-  get 'login' => 'sessions#login', as: 'login'
-  post 'login' => 'sessions#login'
+  get 'login(/:sti_identifier)' => 'sessions#login', as: 'login'
+  post 'login(/:sti_identifier)' => 'sessions#login'
 
   get 'logout' => 'sessions#logout', as: 'logout'
 
-  get 'reset-password' => 'sessions#reset_password', as: 'reset_password'
-  post 'reset-password' => 'sessions#reset_password'
+  get 'reset-password(/:sti_identifier)' => 'sessions#reset_password', as: 'reset_password'
+  post 'reset-password(/:sti_identifier)' => 'sessions#reset_password'
 
-  get 'validate-password-reset/:encoded_params' => 'sessions#validate_password_reset', as: 'validate_password_reset'
-  post 'validate-password-reset/:encoded_params' => 'sessions#validate_password_reset'
+  get 'validate-password-reset/:encoded_params(/:sti_identifier)' => 'sessions#validate_password_reset', as: 'validate_password_reset'
+  post 'validate-password-reset/:encoded_params(/:sti_identifier)' => 'sessions#validate_password_reset'
 
-  get 'sign-up(/:class_type)' => 'users#sign_up', as: 'sign_up'
-  post 'sign-up(/:class_type)' => 'users#sign_up'
+  get 'sign-up(/:sti_identifier)' => 'users#sign_up', as: 'sign_up'
+  post 'sign-up(/:sti_identifier)' => 'users#sign_up'
 
-  get 'invitation-sign-up(/:class_type)' => 'users#invitation_sign_up', as: 'invitation_sign_up'
-  post 'invitation-sign-up(/:class_type)' => 'users#invitation_sign_up'
+  get 'invitation-sign-up(/:sti_identifier)' => 'users#invitation_sign_up', as: 'invitation_sign_up'
+  post 'invitation-sign-up(/:sti_identifier)' => 'users#invitation_sign_up'
 
-  get 'make-password-to-signup/:encoded_params' => 'sessions#make_password', as: 'make_password_to_signup'
+  get 'make-password-to-signup/:encoded_params(/:sti_identifier)' => 'sessions#make_password', as: 'make_password_to_signup'
 
   get 'change-password' => 'users#change_password', as: 'change_password'
   post 'change-password' => 'users#change_password'
