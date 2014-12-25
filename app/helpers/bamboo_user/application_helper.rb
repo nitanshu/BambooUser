@@ -139,5 +139,9 @@ module BambooUser
       render(partial: 'bamboo_user/users/change_password_form', locals: _default_options.merge(options))
     end
 
+    def linkify(link_path, _url_options = ActionController::Base.default_url_options)
+      ActionDispatch::Http::URL.url_for(_url_options.merge(path: link_path))
+    end
+
   end
 end

@@ -36,6 +36,11 @@ To access already logged in user from session.
     logged_user
 
 
+To generate link (with url_options, may be from a mailer). Mainly to be used in mailers for forwarding bamboo_user generated links.
+
+    linkify(link_path, _url_options = ActionController::Base.default_url_options)
+
+
 To generate Login form with default Forgot-password link and Signup link
 
     <%=login_form do |f| %>
