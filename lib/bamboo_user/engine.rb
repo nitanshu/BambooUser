@@ -49,6 +49,18 @@ module BambooUser
           _restrict_access
         end
 
+        def restricted_previous_url
+          [nil, BambooUser.white_listed_sti_classes.keys].flatten.uniq.collect do |_sti_identifier|
+            [
+                bamboo_user.login_path(sti_identifier: _sti_identifier),
+                bamboo_user.logout_path(sti_identifier: _sti_identifier),
+                bamboo_user.reset_password_path(sti_identifier: _sti_identifier),
+                bamboo_user.invitation_sign_up_path(sti_identifier: _sti_identifier),
+                (BambooUser.custom_signup_path.nil? ? bamboo_user.sign_up_path(sti_identifier: _sti_identifier) : eval(BambooUser.custom_signup_path))
+            ]
+          end.flatten.uniq
+        end
+
         # Stores last url visited which is needed for post login redirect
         def store_location
           return if request.xhr? or (not request.get?)
@@ -61,13 +73,7 @@ module BambooUser
             #request.path != "/users/password/edit" &&
             #request.path != "/users/confirmation" &&
             #request.path != "/users/sign_out"
-            session[:previous_url] = request.fullpath unless [
-                bamboo_user.login_path,
-                bamboo_user.logout_path,
-                bamboo_user.reset_password_path,
-                bamboo_user.invitation_sign_up_path,
-                (BambooUser.custom_signup_path.nil? ? bamboo_user.sign_up_path : eval(BambooUser.custom_signup_path))
-            ].compact.include?(request.path)
+            session[:previous_url] = request.fullpath unless restricted_previous_url.include?(request.path)
           end
 
         end

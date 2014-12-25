@@ -14,8 +14,7 @@ module BambooUser
     def edit_profile
       @user = logged_user
       if request.patch?
-        class_sym = @model.name.underscore.to_sym
-        _user_params = user_params(class_sym).clone
+        _user_params = user_params((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym).clone
         _user_params.delete(:email)
         if @user.update(_user_params)
           redirect_to eval(BambooUser.after_profile_save_path) and return

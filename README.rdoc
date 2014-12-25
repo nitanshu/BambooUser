@@ -161,6 +161,24 @@ To generate Profile edit form
     <%end %>
 
 
+To generate Profile edit form for STI classes (of BambooUser::User class).
+(For this to work, one need to have proper setup of white_listed_sti_classes)
+
+    <%=profile_form_for(StiClass.new) do |f| %>
+        <%= f.text_field :email %>
+        <%= f.password_field :password %>
+        <%= f.password_field :password_confirmation %>
+        <%= f.file_field :photo %>
+        <%= f.fields_for :user_detail do |ud_f| %>
+          <%= ud_f.text_field :first_name %>
+          .
+          .
+          <%= ud_f.text_field :last_name %>
+        <%end %>
+        <%= f.submit 'Update' %>
+    <%end %>
+
+
 == Helpers (continued) snippets
 
 Default styled login form

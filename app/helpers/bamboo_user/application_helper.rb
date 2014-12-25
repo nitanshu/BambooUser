@@ -52,7 +52,11 @@ module BambooUser
     end
 
     def profile_form(options={}, &block)
-      options = options.merge(url: bamboo_user.edit_profile_path)
+      profile_form_for(@user, options={}, &block)
+    end
+
+    def profile_form_for(object, options={}, &block)
+      options = options.merge(url: bamboo_user.edit_profile_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[object.class.name]))
       options = options.merge(multipart: true) if BambooUser.photofy_enabled
       form_for(@user, options, &block)
     end

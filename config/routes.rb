@@ -20,13 +20,13 @@ BambooUser::Engine.routes.draw do
 
   get 'make-password-to-signup/:encoded_params(/:sti_identifier)' => 'sessions#make_password', as: 'make_password_to_signup'
 
-  get 'change-password' => 'users#change_password', as: 'change_password'
-  post 'change-password' => 'users#change_password'
+  get 'change-password(/:sti_identifier)' => 'users#change_password', as: 'change_password'
+  post 'change-password(/:sti_identifier)' => 'users#change_password'
 
   get 'my-profile' => 'users#profile', as: 'my_profile'
 
-  get 'edit-profile' => 'users#edit_profile', as: 'edit_profile'
-  patch 'edit-profile' => 'users#edit_profile'
+  get 'edit-profile(/:sti_identifier)' => 'users#edit_profile', as: 'edit_profile'
+  patch 'edit-profile(/:sti_identifier)' => 'users#edit_profile'
 
   # resources :users
 end
