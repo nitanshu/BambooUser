@@ -58,7 +58,7 @@ module BambooUser
                 bamboo_user.invitation_sign_up_path(sti_identifier: _sti_identifier),
                 (BambooUser.custom_signup_path.nil? ? bamboo_user.sign_up_path(sti_identifier: _sti_identifier) : eval(BambooUser.custom_signup_path))
             ]
-          end.flatten.uniq
+          end.flatten.uniq.compact
         end
 
         # Stores last url visited which is needed for post login redirect
@@ -75,7 +75,24 @@ module BambooUser
             #request.path != "/users/sign_out"
             session[:previous_url] = request.fullpath unless restricted_previous_url.include?(request.path)
           end
+        end
 
+        def available_for_non_validated_session
+          return true unless logged_in?
+
+          _flag = (([nil, BambooUser.white_listed_sti_classes.keys].flatten.uniq.collect do |_sti_identifier|
+            [
+                bamboo_user.login_path(sti_identifier: _sti_identifier),
+                bamboo_user.reset_password_path(sti_identifier: _sti_identifier),
+                bamboo_user.invitation_sign_up_path(sti_identifier: _sti_identifier),
+                bamboo_user.sign_up_path(sti_identifier: _sti_identifier),
+                (eval(BambooUser.custom_signup_path) unless BambooUser.custom_signup_path.nil?)
+            ]
+          end) << BambooUser.paths_only_for_non_validated_sessions.collect { |_path| eval(_path) }).flatten.compact.uniq.include?(request.path)
+
+          (redirect_to(eval(BambooUser.revert_back_to_after_hitting_non_validated_sessions_paths)) and return false) if _flag
+
+          true
         end
       end
 
@@ -83,6 +100,7 @@ module BambooUser
       ActionController::Base.send :helper_method, :logged_in?
       ActionController::Base.send :before_filter, :store_location
       ActionController::Base.send :before_filter, :fetch_logged_user
+      ActionController::Base.send :before_filter, :available_for_non_validated_session
     end
 
     initializer "bamboo_users.view_helpers" do

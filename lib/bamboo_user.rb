@@ -116,6 +116,13 @@ module BambooUser
 
   mattr_accessor :public_paths
   @@public_paths = {controller_name_1: [all_actions], controller_name_2: [:action_1, :action_2, :action_3]}
+
+  mattr_accessor :paths_only_for_non_validated_sessions
+  @@paths_only_for_non_validated_sessions = []
+
+  mattr_accessor :revert_back_to_after_hitting_non_validated_sessions_paths
+  @@revert_back_to_after_hitting_non_validated_sessions_paths = 'main_app.root_path'
+
 end
 
 require "bamboo_user/filter"
