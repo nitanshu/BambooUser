@@ -33,6 +33,9 @@ module BambooUser
   mattr_reader :photofy_enabled
   @@photofy_enabled = false
 
+  mattr_reader :constant_encoded_param
+  @@constant_encoded_param = SecureRandom.urlsafe_base64
+
   #Usage example:
   #BambooUser.add_photofy do |user_class|
   # user_class.photofy :collage

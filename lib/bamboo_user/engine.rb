@@ -77,20 +77,46 @@ module BambooUser
           end
         end
 
+        def restricted_paths_with_encoded_params?(paths_with_encoded_params, compare_path = request.path)
+          result = false
+          compare_path_array = compare_path.split('/').compact
+          paths_with_encoded_params.each do |path|
+            path_array = path.split('/').compact
+
+            unless (encoded_params_index = path_array.index(BambooUser.constant_encoded_param)).nil?
+              path_array.delete_at(encoded_params_index)
+              _temp_compare_path_array = compare_path_array.clone
+              _temp_compare_path_array.delete_at(encoded_params_index)
+              (result = true) if path_array == _temp_compare_path_array
+            end
+          end
+          result
+        end
+
         def available_for_non_validated_session
           return true unless logged_in?
-
-          _flag = (([nil, BambooUser.white_listed_sti_classes.keys].flatten.uniq.collect do |_sti_identifier|
+          all_paths_array = (([nil, BambooUser.white_listed_sti_classes.keys].flatten.uniq.collect do |_sti_identifier|
             [
                 bamboo_user.login_path(sti_identifier: _sti_identifier),
                 bamboo_user.reset_password_path(sti_identifier: _sti_identifier),
                 bamboo_user.invitation_sign_up_path(sti_identifier: _sti_identifier),
                 bamboo_user.sign_up_path(sti_identifier: _sti_identifier),
-                (eval(BambooUser.custom_signup_path) unless BambooUser.custom_signup_path.nil?)
+                (eval(BambooUser.custom_signup_path) unless BambooUser.custom_signup_path.nil?),
+                bamboo_user.validate_password_reset_path(encoded_params: BambooUser.constant_encoded_param, sti_identifier: _sti_identifier),
+                bamboo_user.make_password_to_signup_path(encoded_params: BambooUser.constant_encoded_param, sti_identifier: _sti_identifier)
             ]
-          end) << BambooUser.paths_only_for_non_validated_sessions.collect { |_path| eval(_path) }).flatten.compact.uniq.include?(request.path)
+          end) << BambooUser.paths_only_for_non_validated_sessions.collect { |_path| eval(_path) }).flatten.compact.uniq
 
-          (redirect_to(eval(BambooUser.revert_back_to_after_hitting_non_validated_sessions_paths)) and return false) if _flag
+          paths_with_encoded_params, paths_without_encoded_params = [], []
+          all_paths_array.each do |_path|
+            if _path.include?(BambooUser.constant_encoded_param)
+              paths_with_encoded_params << _path
+            else
+              paths_without_encoded_params << _path
+            end
+          end
+
+          (redirect_to(eval(BambooUser.revert_back_to_after_hitting_non_validated_sessions_paths)) and return false) if (paths_without_encoded_params.include?(request.path) or restricted_paths_with_encoded_params?(paths_with_encoded_params))
 
           true
         end

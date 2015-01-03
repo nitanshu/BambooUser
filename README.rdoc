@@ -271,7 +271,7 @@ But to customize, there are few other options kept open. Add an initializer file
                 controller_name_3: [BambooUser.all_actions]
             }
 
-2.  Paths for login, signup, invitation signup or reset-password is only accessible when no logged-in user is present and if requested from a validated session it will redirect to a specified path but <em>(Default is <b>main_app.root_path</b>)</em>.
+2.  Paths for login, signup, invitation signup, reset-password, validate_password_reset and make_password_to_signup is only accessible when no logged-in user is present and if requested from a validated session it will redirect to a specified path but <em>(Default is <b>main_app.root_path</b>)</em>.
         BambooUser.revert_back_to_after_hitting_non_validated_sessions_paths = 'main_app.root_path'
 
 
