@@ -37,13 +37,14 @@ module BambooUser
                                                        }) if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
     end
 
-    def request_invitation_signup!
-      BambooUser.after_request_invitation_signup_success_callback({
-                                                                      user: self,
-                                                                      invitation_signup_link: BambooUser::Engine.routes.url_helpers.make_password_to_signup_path(
-                                                                          encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"),
-                                                                          sti_identifier: BambooUser.white_listed_sti_classes.invert[self.class.name])
-                                                                  }) if self.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
+    def invitation_signup_link(host=nil)
+      BambooUser::Engine.routes.url_helpers.send(
+          "make_password_to_signup_#{host.nil? ? 'path' : 'url'}",
+          {
+              encoded_params: Base64.urlsafe_encode64("#{self.password_reset_token}||#{self.email}"),
+              sti_identifier: BambooUser.white_listed_sti_classes.invert[self.class.name],
+              host: host
+          })
     end
 
     def perform_reset_password!(user_params, reset_for = 'password_recovery')
@@ -54,20 +55,6 @@ module BambooUser
         return true
       end
       false
-    end
-
-    def self.find_or_create_invited_by_email(params={}, send_invitation = true)
-      params.stringify_keys!
-      raise "EmailRequired" unless  params.include?('email')
-
-      _self = where(email: params['email']).first
-      if _self.nil?
-        _new_user = new(params.merge(password: "ishouldn'thavebeenthepassword"))
-        _new_user.request_invitation_signup! if (_new_user_save_flag = _new_user.save) and send_invitation
-        [_new_user, (_new_user_save_flag ? 'created' : 'creation_failed')]
-      else
-        [_self, 'found']
-      end
     end
 
     private

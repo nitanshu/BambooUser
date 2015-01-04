@@ -223,13 +223,6 @@ Default styled edit profile form (extended)
 
 == Callbacks
 
-After invitation based signup request has been placed with a valid new email
-
-    def BambooUser.after_request_invitation_signup_success_callback(options)
-        #user code
-    end
-
-
 After password-reset request has been placed with a valid email of user
 
     def BambooUser.after_password_reset_request_callback(options)
@@ -244,30 +237,44 @@ After user visit and validates correct password-reset link (may be sent over ema
     end
 
 
-Filter(callback) after_login. Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
+== Filters
+Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
 
-    after_login do |options|
+after_login filter(s) (if defined) will be called when login is successful.
+
+    after_login do |option|
         #user code
     end
     after_login :some_method_1_to_call, :some_method_2_to_call
 
-    #Define callbacks methods like below (in application controller)
-    def some_method_1_to_call(options)
-        user = options.first
+    #Define callbacks methods like (in application controller)
+    def some_method_1_to_call(user)
         #user code goes in here
     end
 
 
-Filter(callback) after_signup. Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
+after_signup filter(s) (if defined) will be called when signup is successful.
 
-    after_signup do |options|
+    after_signup do |option|
         #user code
     end
     after_signup :some_method_3_to_call, :some_method_4_to_call
 
     #Define callbacks methods like below (in application controller)
-    def some_method_2_to_call(options)
-        user = options.first
+    def some_method_3_to_call(user)
+        #user code goes in here
+    end
+
+
+after_invitation_signup filter(s) (if defined) will be called when invitation based signup is successful.
+
+    after_invitation_signup do |option|
+        #user code
+    end
+    after_invitation_signup :some_method_5_to_call, :some_method_6_to_call
+
+    #Define callbacks methods like below (in application controller)
+    def some_method_5_to_call(options)
         #user code goes in here
     end
 
@@ -401,4 +408,3 @@ But to customize, there are few other options kept open. Add an initializer file
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-

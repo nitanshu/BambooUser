@@ -8,12 +8,16 @@ module BambooUser
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
     after_signup :default_after_signup
+    after_invitation_signup :default_after_invitation_signup
 
-    def default_after_signup(*options)
-      user = options.first
+    def default_after_signup(user)
       session[:user] = user.id if BambooUser.auto_login_after_signup
       session[:previous_url] = nil #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
       #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
+    end
+
+    def default_after_invitation_signup(options)
+      Rails.logger.debug options.inspect
     end
 
     def profile
@@ -59,15 +63,30 @@ module BambooUser
       @user = @model.new
       session[:previous_url] = nil #Otherwise it may re-take back to invitation_sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
       if request.post?
-        @user, status = @model.find_or_create_invited_by_email(user_params((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym))
+        params = user_params((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym).clone
+        params.stringify_keys!
+        raise "EmailRequired" unless  params.include?('email')
 
-        if status == 'found'
+        _self = @model.where(email: params['email']).first
+        if _self.nil?
+          user = @model.new(params.merge(
+                                password_reset_token: SecureRandom.uuid,
+                                password_reset_sent_at: Time.now,
+                                password: "ishouldn'thavebeenthepassword"))
+
+          if user.save
+            _return = self.class.process_after_invitation_signup_callbacks(self,
+                                                                           user: user,
+                                                                           invitation_path: user.invitation_signup_link,
+                                                                           invitation_url: user.invitation_signup_link(request.host_with_port))
+            return _return if _return == false
+            redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{user.email}. Please check") and return
+          else
+            logger.debug(user.errors.inspect)
+            redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Some error occurred. Please contact administrator.' and return
+          end
+        else
           redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'User already exist' and return
-        elsif status == 'creation_failed'
-          logger.info(@user.errors.inspect)
-          redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Some error occurred. Please contact administrator.' and return
-        elsif status == 'created'
-          redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{@user.email}. Please check") and return
         end
       end
       render layout: BambooUser.signup_screen_layout
