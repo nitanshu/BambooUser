@@ -7,7 +7,7 @@ module BambooUser
 
     after_login :default_redirect_after_login
 
-    def default_redirect_after_login
+    def default_redirect_after_login(*user)
       redirect_to((BambooUser.always_redirect_to_login_path ? eval(BambooUser.after_login_path) : (session[:previous_url] || eval(BambooUser.after_login_path)))) and return false
     end
 
@@ -19,7 +19,7 @@ module BambooUser
           session[:user] = user.id
           cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
 
-          return self.class.process_after_login_callbacks(self)
+          return self.class.process_after_login_callbacks(self, user)
         end
       end
       render layout: BambooUser.login_screen_layout

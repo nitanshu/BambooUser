@@ -6,13 +6,13 @@ module BambooUser
       @@after_login_callbacks << blk
     end
 
-    def process_after_login_callbacks(instance)
+    def process_after_login_callbacks(controller, object)
       @@after_login_callbacks ||= []
       @@after_login_callbacks.flatten.compact.each do |callback|
         _return = if callback.is_a?(Proc)
-                    callback.call
+                    callback.call(object)
                   else
-                    instance.send(callback)
+                    controller.send(callback, object)
                   end
         return _return if _return == false
       end
