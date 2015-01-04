@@ -7,6 +7,15 @@ module BambooUser
     before_filter :fetch_model_reflection, only: [:sign_up, :invitation_sign_up, :edit_profile, :index, :show, :new, :create, :edit, :update, :destroy]
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
+    after_signup :default_after_signup
+
+    def default_after_signup(*options)
+      user = options.first
+      session[:user] = user.id if BambooUser.auto_login_after_signup
+      session[:previous_url] = nil #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
+      #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
+    end
+
     def profile
       render layout: BambooUser.profile_screen_layout
     end
@@ -36,11 +45,9 @@ module BambooUser
       if request.post?
         @user = @model.new(user_params((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym))
         if @user.save
-          session[:user] = @user.id if BambooUser.auto_login_after_signup
-          session[:previous_url] = nil #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
-          #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
-          BambooUser.after_registration_success_callback({user: @user})
-          signup_success_handler and return
+          _return = self.class.process_after_signup_callbacks(self, @user)
+          return _return if _return == false
+          redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path)) and return
         else
           signup_failure_handler and return
         end

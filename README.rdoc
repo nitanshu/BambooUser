@@ -223,13 +223,6 @@ Default styled edit profile form (extended)
 
 == Callbacks
 
-After successful signup
-
-    def BambooUser.after_registration_success_callback(options)
-        #user code
-    end
-
-
 After invitation based signup request has been placed with a valid new email
 
     def BambooUser.after_request_invitation_signup_success_callback(options)
@@ -251,12 +244,32 @@ After user visit and validates correct password-reset link (may be sent over ema
     end
 
 
-Filter(callback) after login. Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
+Filter(callback) after_login. Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
 
-    after_login do
+    after_login do |options|
         #user code
     end
     after_login :some_method_1_to_call, :some_method_2_to_call
+
+    #Define callbacks methods like below (in application controller)
+    def some_method_1_to_call(options)
+        user = options.first
+        #user code goes in here
+    end
+
+
+Filter(callback) after_signup. Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
+
+    after_signup do |options|
+        #user code
+    end
+    after_signup :some_method_3_to_call, :some_method_4_to_call
+
+    #Define callbacks methods like below (in application controller)
+    def some_method_2_to_call(options)
+        user = options.first
+        #user code goes in here
+    end
 
 
 == Customizations

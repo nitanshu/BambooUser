@@ -13,10 +13,6 @@ module BambooUser
     initializer "bamboo_users.settings_filters" do
       ActionController::Base.class_eval do
 
-        def signup_success_handler
-          redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path))
-        end
-
         def signup_failure_handler(notice = "Failed to sign up")
           redirect_to eval(BambooUser.after_signup_failed_path), notice: notice
         end
