@@ -48,16 +48,6 @@ module BambooUser
           })
     end
 
-    def perform_reset_password!(user_params, reset_for = 'password_recovery')
-      s_user_params = user_params.keep_if { |k, v| %w(password password_confirmation).include?(k) }
-      if self.update(s_user_params.merge(password_reset_token: nil, password_reset_sent_at: nil))
-        BambooUser.after_registration_success_callback({user: self}) if (reset_for == 'new_signup')
-        BambooUser.after_password_reset_confirmed_callback({user: self}) if (reset_for == 'password_recovery')
-        return true
-      end
-      false
-    end
-
     private
     def provision_user_detail
       if self.user_detail.nil?

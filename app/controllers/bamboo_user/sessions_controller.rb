@@ -5,17 +5,6 @@ module BambooUser
     skip_before_filter :fetch_logged_user, only: [:login, :reset_password, :validate_password_reset, :make_password]
     before_filter :fetch_model_reflection
 
-    after_login :default_redirect_after_login
-    after_password_reset_request :default_after_password_reset_request
-
-    def default_redirect_after_login(user)
-      redirect_to((BambooUser.always_redirect_to_login_path ? eval(BambooUser.after_login_path) : (session[:previous_url] || eval(BambooUser.after_login_path)))) and return false
-    end
-
-    def default_after_password_reset_request(option)
-      Rails.logger.debug option.inspect
-    end
-
     def login
       @user = @model.new
       if request.post?
@@ -73,17 +62,21 @@ module BambooUser
       @user = @model.find_by(email: @_email)
       if request.post?
         if (@user and @user.password_reset_token == _password_reset_token and ((Time.now - @user.password_reset_sent_at) <= 86400.0)) #reset-token shouldn't be more than 1 day(i.e 86400 seconds) old
-          if (not params[class_sym][:password].blank?) and @user.perform_reset_password!(user_params(class_sym), reset_for)
+          _user_params = user_params(class_sym).clone
+          s_user_params = _user_params.keep_if { |k, v| %w(password password_confirmation).include?(k) }
+
+          if (not params[class_sym][:password].blank?) and @user.update(s_user_params.merge(password_reset_token: nil, password_reset_sent_at: nil))
             session[:previous_url] = nil #Otherwise it may re-take back to reset_password page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
 
             if reset_for == 'password_recovery'
-              redirect_to(login_path, notice: 'New password created successfully. Please login with updated credentials here.') and return
-            elsif reset_for == 'new_signup'
-              session[:user] = @user.id
-              #cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
+              _return = self.class.process_after_password_reset_callbacks(self, @user)
+              return _return if _return == false
 
-              #BambooUser.after_registration_success_callback({user: @user}) #This thing is taken care from @user.perform_reset_password!
-              redirect_to((session[:previous_url] || eval(BambooUser.after_signup_path)), notice: 'Welcome') and return
+            elsif reset_for == 'new_signup'
+
+              _return = self.class.process_after_signup_callbacks(self, @user)
+              return _return if _return == false
+              redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path)) and return
             end
           else
             logger.debug(@user.errors.inspect)

@@ -7,19 +7,6 @@ module BambooUser
     before_filter :fetch_model_reflection, only: [:sign_up, :invitation_sign_up, :edit_profile, :index, :show, :new, :create, :edit, :update, :destroy]
     before_action :set_user, only: [:show, :edit, :update, :destroy]
 
-    after_signup :default_after_signup
-    after_invitation_signup :default_after_invitation_signup
-
-    def default_after_signup(user)
-      session[:user] = user.id if BambooUser.auto_login_after_signup
-      session[:previous_url] = nil #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
-      #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
-    end
-
-    def default_after_invitation_signup(options)
-      Rails.logger.debug options.inspect
-    end
-
     def profile
       render layout: BambooUser.profile_screen_layout
     end

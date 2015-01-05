@@ -221,15 +221,6 @@ Default styled edit profile form (extended)
     <%=profile_edit_extended_snippet %>
 
 
-== Callbacks
-
-After user visit and validates correct password-reset link (may be sent over email or by other means)
-
-    def BambooUser.after_password_reset_confirmed_callback(options)
-        #user code
-    end
-
-
 == Filters
 Its like other rails filters available in controllers. Execution order of filters is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
 
@@ -281,6 +272,19 @@ after_password_reset_request filter(s) (if defined) will be called when request 
 
     #Define callbacks methods like below (in application controller)
     def some_method_7_to_call(options)
+        #user code goes in here
+    end
+
+
+after_password_reset filter(s) (if defined) will be called when new password is successfully created upon visiting password-reset request link.
+
+    after_password_reset do |option|
+        #user code
+    end
+    after_password_reset :some_method_9_to_call, :some_method_10_to_call
+
+    #Define callbacks methods like (in application controller)
+    def some_method_9_to_call(user)
         #user code goes in here
     end
 

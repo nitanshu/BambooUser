@@ -7,6 +7,34 @@ module BambooUser
 
     before_filter :check_root_owner
 
+    after_signup :default_after_signup
+    after_invitation_signup :default_after_invitation_signup
+    after_login :default_redirect_after_login
+    after_password_reset_request :default_after_password_reset_request
+    after_password_reset :default_after_password_reset
+
+    def default_after_signup(user)
+      session[:user] = user.id if BambooUser.auto_login_after_signup
+      session[:previous_url] = nil #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
+      #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
+    end
+
+    def default_after_invitation_signup(options)
+      Rails.logger.debug options.inspect
+    end
+
+    def default_redirect_after_login(user)
+      redirect_to((BambooUser.always_redirect_to_login_path ? eval(BambooUser.after_login_path) : (session[:previous_url] || eval(BambooUser.after_login_path)))) and return false
+    end
+
+    def default_after_password_reset_request(options)
+      Rails.logger.debug options.inspect
+    end
+
+    def default_after_password_reset(user)
+      redirect_to(login_path, notice: 'New password created successfully. Please login with updated credentials here.') and return
+    end
+
     def check_root_owner
       if BambooUser.owner_available?
         begin
