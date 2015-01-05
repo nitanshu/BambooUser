@@ -6,9 +6,14 @@ module BambooUser
     before_filter :fetch_model_reflection
 
     after_login :default_redirect_after_login
+    after_password_reset_request :default_after_password_reset_request
 
     def default_redirect_after_login(user)
       redirect_to((BambooUser.always_redirect_to_login_path ? eval(BambooUser.after_login_path) : (session[:previous_url] || eval(BambooUser.after_login_path)))) and return false
+    end
+
+    def default_after_password_reset_request(option)
+      Rails.logger.debug option.inspect
     end
 
     def login
@@ -31,8 +36,19 @@ module BambooUser
 
         @user = @model.find_by(email: params[class_sym][:email])
         if (@user)
-          @user.request_reset_password!
-          redirect_to(login_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[@user.class.name]), notice: 'An email with password reset link has been sent to registered email address. Please check') and return
+          if @user.update(password_reset_token: SecureRandom.uuid, password_reset_sent_at: Time.now)
+            _return = self.class.process_after_password_reset_request_callbacks(self,
+                                                                                user: @user,
+                                                                                reset_password_path: @user.reset_password_link,
+                                                                                reset_password_url: @user.reset_password_link(request.host_with_port))
+            return _return if _return == false
+
+            _notice_message ='An email with password reset link has been sent to registered email address. Please check'
+          else
+            Rails.logger.debug(@user.errors.inspect)
+            _notice_message = 'Some error occurred. Please contact administrator.'
+          end
+          redirect_to(login_path(sti_identifier: BambooUser.white_listed_sti_classes.invert[@user.class.name]), notice: _notice_message) and return
         else
           flash[:notice] = "No registered user found with email '#{params[class_sym][:email]}'."
         end

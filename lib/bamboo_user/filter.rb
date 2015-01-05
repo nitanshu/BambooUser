@@ -57,5 +57,24 @@ module BambooUser
       end
     end
 
+    ###### after-password_reset_request callbacks ######################################
+    def after_password_reset_request(*names, &blk)
+      @@after_password_reset_request_callbacks ||= []
+      @@after_password_reset_request_callbacks << names
+      @@after_password_reset_request_callbacks << blk
+    end
+
+    def process_after_password_reset_request_callbacks(controller, **object)
+      @@after_password_reset_request_callbacks ||= []
+      @@after_password_reset_request_callbacks.flatten.compact.each do |callback|
+        _return = if callback.is_a?(Proc)
+                    callback.call(object)
+                  else
+                    controller.send(callback, object)
+                  end
+        return _return if _return == false
+      end
+    end
+
   end
 end
