@@ -250,12 +250,12 @@ after_signup filter(s) (if defined) will be called when signup is successful.
     end
 
 
-after_invitation_signup filter(s) (if defined) will be called when invitation based signup is successful.
+after_invitation filter(s) (if defined) will be called when invitation to signup is sent successfully.
 
-    after_invitation_signup do |option|
+    after_invitation do |option|
         #user code
     end
-    after_invitation_signup :some_method_5_to_call, :some_method_6_to_call
+    after_invitation :some_method_5_to_call, :some_method_6_to_call
 
     #Define callbacks methods like below (in application controller)
     def some_method_5_to_call(options)

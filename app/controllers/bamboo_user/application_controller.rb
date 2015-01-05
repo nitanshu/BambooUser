@@ -8,7 +8,7 @@ module BambooUser
     before_filter :check_root_owner
 
     after_signup :default_after_signup
-    after_invitation_signup :default_after_invitation_signup
+    after_invitation :default_after_invitation
     after_login :default_redirect_after_login
     after_password_reset_request :default_after_password_reset_request
     after_password_reset :default_after_password_reset
@@ -19,7 +19,7 @@ module BambooUser
       #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
     end
 
-    def default_after_invitation_signup(options)
+    def default_after_invitation(options)
       Rails.logger.debug options.inspect
     end
 

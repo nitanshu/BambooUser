@@ -39,15 +39,15 @@ module BambooUser
     end
 
     ###### after-invitation_signup callbacks ###########################################
-    def after_invitation_signup(*names, &blk)
-      @@after_invitation_signup_callbacks ||= []
-      @@after_invitation_signup_callbacks << names
-      @@after_invitation_signup_callbacks << blk
+    def after_invitation(*names, &blk)
+      @@after_invitation_callbacks ||= []
+      @@after_invitation_callbacks << names
+      @@after_invitation_callbacks << blk
     end
 
-    def process_after_invitation_signup_callbacks(controller, **object)
-      @@after_invitation_signup_callbacks ||= []
-      @@after_invitation_signup_callbacks.flatten.compact.each do |callback|
+    def process_after_invitation_callbacks(controller, **object)
+      @@after_invitation_callbacks ||= []
+      @@after_invitation_callbacks.flatten.compact.each do |callback|
         _return = if callback.is_a?(Proc)
                     callback.call(object)
                   else

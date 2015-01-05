@@ -62,7 +62,7 @@ module BambooUser
                                 password: "ishouldn'thavebeenthepassword"))
 
           if user.save
-            _return = self.class.process_after_invitation_signup_callbacks(self,
+            _return = self.class.process_after_invitation_callbacks(self,
                                                                            user: user,
                                                                            invitation_path: user.invitation_signup_link,
                                                                            invitation_url: user.invitation_signup_link(request.host_with_port))
