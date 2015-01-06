@@ -95,7 +95,7 @@ module BambooUser
             [
                 bamboo_user.login_path(sti_identifier: _sti_identifier),
                 bamboo_user.reset_password_path(sti_identifier: _sti_identifier),
-                bamboo_user.invitation_sign_up_path(sti_identifier: _sti_identifier),
+                # bamboo_user.invitation_sign_up_path(sti_identifier: _sti_identifier),
                 bamboo_user.sign_up_path(sti_identifier: _sti_identifier),
                 (eval(BambooUser.custom_signup_path) unless BambooUser.custom_signup_path.nil?),
                 bamboo_user.validate_password_reset_path(encoded_params: BambooUser.constant_encoded_param, sti_identifier: _sti_identifier),
