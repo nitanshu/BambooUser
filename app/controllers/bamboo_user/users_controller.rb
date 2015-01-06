@@ -63,9 +63,10 @@ module BambooUser
 
           if user.save
             _return = self.class.process_after_invitation_callbacks(self,
-                                                                           user: user,
-                                                                           invitation_path: user.invitation_signup_link,
-                                                                           invitation_url: user.invitation_signup_link(request.host_with_port))
+                                                                    user: user,
+                                                                    invitation_path: user.invitation_signup_link,
+                                                                    invitation_url: user.invitation_signup_link(request.host_with_port),
+                                                                    message: 'new_user_created')
             return _return if _return == false
             redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{user.email}. Please check") and return
           else
@@ -73,6 +74,10 @@ module BambooUser
             redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Some error occurred. Please contact administrator.' and return
           end
         else
+          _return = self.class.process_after_invitation_callbacks(self,
+                                                                  user: user,
+                                                                  message: 'user_already_exist')
+          return _return if _return == false
           redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'User already exist' and return
         end
       end
