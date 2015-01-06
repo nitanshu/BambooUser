@@ -75,7 +75,7 @@ module BambooUser
           end
         else
           _return = self.class.process_after_invitation_callbacks(self,
-                                                                  user: user,
+                                                                  user: _self,
                                                                   message: 'user_already_exist')
           return _return if _return == false
           redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'User already exist' and return
