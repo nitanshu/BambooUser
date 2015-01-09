@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 4.1.1"
-  s.add_dependency 'bcrypt', '~> 3.1.7' # Use ActiveModel has_secure_password
-  s.add_dependency 'rmagick', '~> 2.13.3'
-  s.add_dependency 'photofy', '~> 0.3.1'
+  s.add_dependency "rails", ">= 4.1.1"
+  s.add_dependency 'bcrypt', '>= 3.1.7' # Use ActiveModel has_secure_password
+  s.add_dependency 'rmagick', '>= 2.13.3'
+  s.add_dependency 'photofy', '>= 0.3.1'
 end
