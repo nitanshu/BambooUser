@@ -75,6 +75,9 @@ module BambooUser
   mattr_accessor :login_screen_path
   @@login_screen_path = 'bamboo_user.login_path'
 
+  mattr_accessor :login_partial_path
+  @@login_partial_path = 'bamboo_user/sessions/login_form'
+
   mattr_accessor :after_login_path
   @@after_login_path = 'main_app.root_path'
 

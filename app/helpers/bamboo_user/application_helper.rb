@@ -85,7 +85,7 @@ module BambooUser
           instructions: true,
           instruction_message: ''
       }
-      render(partial: 'bamboo_user/sessions/login_form', locals: _default_options.merge(options))
+      render(partial: BambooUser.login_partial_path, locals: _default_options.merge(options))
     end
 
     def signup_snippet
