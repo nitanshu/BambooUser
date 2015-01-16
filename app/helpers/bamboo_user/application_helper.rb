@@ -18,7 +18,7 @@ module BambooUser
     end
 
     def login_form(options={}, &block)
-      login_form_for(@user, options={}, &block)
+      login_form_for(@user, options, &block)
     end
 
     def login_form_for(object, options={}, &block)
@@ -41,7 +41,7 @@ module BambooUser
     end
 
     def invitation_signup_form(options={}, &block)
-      invitation_signup_form_for(@user, options={}, &block)
+      invitation_signup_form_for(@user, options, &block)
     end
 
     def invitation_signup_form_for(object, options={}, &block)
@@ -52,7 +52,7 @@ module BambooUser
     end
 
     def profile_form(options={}, &block)
-      profile_form_for(@user, options={}, &block)
+      profile_form_for(@user, options, &block)
     end
 
     def profile_form_for(object, options={}, &block)
@@ -62,7 +62,7 @@ module BambooUser
     end
 
     def reset_password_form(options={}, &block)
-      reset_password_form_for(@user, options={}, &block)
+      reset_password_form_for(@user, options, &block)
     end
 
     def reset_password_form_for(object, options={}, &block)
