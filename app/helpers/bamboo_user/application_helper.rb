@@ -102,12 +102,12 @@ module BambooUser
           instructions: true,
           instruction_message: ''
       }
-      render(partial: 'bamboo_user/users/signup_form', locals: _default_options.merge(options))
+      render(partial: BambooUser.signup_partial_path, locals: _default_options.merge(options))
     end
 
     def invitation_signup_snippet(options={})
       _default_options = {show_label: true}
-      render(partial: 'bamboo_user/users/invitation_signup_form', locals: _default_options.merge(options))
+      render(partial: BambooUser.invitation_signup_partial_path, locals: _default_options.merge(options))
     end
 
     def profile_edit_snippet
@@ -124,7 +124,7 @@ module BambooUser
           instructions: true,
           instruction_message: 'Please enter your details below.'
       }
-      render(partial: 'bamboo_user/users/profile_form', locals: _default_options.merge(options))
+      render(partial: BambooUser.user_profile_partial_path, locals: _default_options.merge(options))
     end
 
     def reset_password_snippet(options={})
@@ -132,7 +132,7 @@ module BambooUser
           show_label: true,
           instructions: true,
           instruction_message: 'Please enter your registered email address below and click “Reset password”. You will receive an email containing instructions and a temporary link for resetting your password.'}
-      render(partial: 'bamboo_user/sessions/reset_password_form', locals: _default_options.merge(options))
+      render(partial: BambooUser.reset_password_partial_path, locals: _default_options.merge(options))
     end
 
     def change_password_snippet(options={})
@@ -140,7 +140,7 @@ module BambooUser
           show_label: true,
           instructions: true,
           instruction_message: 'Please enter your current password and then new password along with its confirmation for change of password.'}
-      render(partial: 'bamboo_user/users/change_password_form', locals: _default_options.merge(options))
+      render(partial: BambooUser.change_password_partial_path, locals: _default_options.merge(options))
     end
 
     def linkify(link_path, _url_options = ActionController::Base.default_url_options)

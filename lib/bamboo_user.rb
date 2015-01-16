@@ -51,6 +51,24 @@ module BambooUser
     (not sti_class_for_signup.nil?) and white_listed_sti_classes.include?(sti_class_for_signup)
   end
 
+  mattr_accessor :login_partial_path
+  @@login_partial_path = 'bamboo_user/sessions/login_form'
+
+  mattr_accessor :signup_partial_path
+  @@signup_partial_path = 'bamboo_user/users/signup_form'
+
+  mattr_accessor :invitation_signup_partial_path
+  @@invitation_signup_partial_path = 'bamboo_user/users/invitation_signup_form'
+
+  mattr_accessor :user_profile_partial_path
+  @@user_profile_partial_path = 'bamboo_user/users/profile_form'
+
+  mattr_accessor :reset_password_partial_path
+  @@reset_password_partial_path = 'bamboo_user/sessions/reset_password_form'
+
+  mattr_accessor :change_password_partial_path
+  @@change_password_partial_path = 'bamboo_user/users/change_password_form'
+
   mattr_accessor :white_listed_sti_classes
   @@white_listed_sti_classes = {} #Hash with url_identifier as key and class name as value like {'student' => 'Student', 'teacher' => 'Teacher'}
 
@@ -74,9 +92,6 @@ module BambooUser
 
   mattr_accessor :login_screen_path
   @@login_screen_path = 'bamboo_user.login_path'
-
-  mattr_accessor :login_partial_path
-  @@login_partial_path = 'bamboo_user/sessions/login_form'
 
   mattr_accessor :after_login_path
   @@after_login_path = 'main_app.root_path'
