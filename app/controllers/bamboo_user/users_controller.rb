@@ -51,35 +51,20 @@ module BambooUser
       session[:previous_url] = nil #Otherwise it may re-take back to invitation_sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
       if request.post?
         params = user_params((@model == BambooUser::User) ? :user : @model.name.underscore.to_sym).clone
-        params.stringify_keys!
-        raise "EmailRequired" unless  params.include?('email')
-
-        _self = @model.where(email: params['email']).first
-        if _self.nil?
-          user = @model.new(params.merge(
-                                password_reset_token: SecureRandom.uuid,
-                                password_reset_sent_at: Time.now,
-                                password: "ishouldn'thavebeenthepassword"))
-
-          if user.save
-            _return = self.class.process_after_invitation_callbacks(self,
-                                                                    user: user,
-                                                                    invitation_path: user.invitation_signup_link,
-                                                                    invitation_url: user.invitation_signup_link(request.host_with_port),
-                                                                    message: 'new_user_created')
-            return _return if _return == false
-            redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{user.email}. Please check") and return
-          else
-            logger.debug(user.errors.inspect)
-            redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Some error occurred. Please contact administrator.' and return
-          end
-        else
-          _return = self.class.process_after_invitation_callbacks(self,
-                                                                  user: _self,
-                                                                  message: 'user_already_exist')
-          return _return if _return == false
-          redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'User already exist' and return
-        end
+        @model.invitation_sign_up(params,
+                                  Proc.new { |passed_params|
+                                    _return = self.class.process_after_invitation_callbacks(self, passed_params.merge(invitation_url: passed_params[:user].invitation_signup_link(request.host_with_port)))
+                                    return _return if _return == false
+                                    redirect_to((session[:previous_url] || eval(BambooUser.after_invitation_signup_path)), notice: "An email with signup link has been sent to #{passed_params[:user].email}. Please check") and return
+                                  },
+                                  Proc.new { |passed_params|
+                                    redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'Some error occurred. Please contact administrator.' and return
+                                  },
+                                  Proc.new { |passed_params|
+                                    _return = self.class.process_after_invitation_callbacks(self, passed_params)
+                                    return _return if _return == false
+                                    redirect_to eval(BambooUser.after_invitation_signup_failed_path), notice: 'User already exist' and return
+                                  })
       end
       render layout: BambooUser.signup_screen_layout
     end

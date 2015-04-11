@@ -1,6 +1,9 @@
 module BambooUser
   class User < ActiveRecord::Base
 
+    #---Constants declarations -------------------------------------
+    SHOULD_NOT_BE_A_PASSWORD = 'ishouldnothavebeenthepassword'
+
     #---Attributes declarations-------------------------------------
     attr_accessor :temp_owner_id
     attr_accessor :current_password
@@ -28,6 +31,38 @@ module BambooUser
                     BambooUser::UserDetail.attribute_names.collect { |x| "#{x}=" }
     ].flatten.compact.delete_if { |x| BambooUser.detail_attributes_to_not_delegate.include?(x) }), to: :user_detail
 
+    #---Class methods ----------------------------------------------
+    def self.invitation_sign_up(params, callback_on_success = proc {}, callback_on_failure = proc {}, callback_on_invalid = proc {})
+      raise 'InvalidCallbacks' unless (callback_on_success.is_a?(Proc) and callback_on_failure.is_a?(Proc) and callback_on_invalid.is_a?(Proc))
+
+      params.stringify_keys!
+      raise 'EmailRequiredInParams' unless  params.include?('email')
+
+      _self = where(email: params['email']).first
+      if _self.nil?
+        user = new(params.merge(password_reset_token: SecureRandom.uuid,
+                                password_reset_sent_at: Time.now,
+                                password: SHOULD_NOT_BE_A_PASSWORD))
+
+        if user.save
+          _out_inference = {user: user, invitation_path: user.invitation_signup_link, message: 'new_user_created'}
+          callback_on_success.call(_out_inference)
+          return _out_inference
+        else
+          logger.debug(user.errors.inspect)
+          _out_inference = {user: user, errors: user.errors,  message: 'errors_on_user_creation'}
+          callback_on_failure.call(_out_inference)
+          return _out_inference
+        end
+        return user
+      else
+        _out_inference = {user: _self, message: 'user_already_exist'}
+        callback_on_invalid.call(_out_inference)
+        return _out_inference
+      end
+    end
+
+    #---Instance methods -------------------------------------------
     def reset_password_link(host=nil)
       BambooUser::Engine.routes.url_helpers.send(
           "validate_password_reset_#{host.nil? ? 'path' : 'url'}",
