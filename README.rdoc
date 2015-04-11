@@ -289,6 +289,22 @@ after_password_reset filter(s) (if defined) will be called when new password is 
     end
 
 
+== Callbacks
+Its like other rails callbacks available in models. Execution order of callbacks is the order in which they are defined. (Current implementation doesn't accommodate :if and :unless as options)
+
+after_invitation callbacks(s) (if defined) will be called when invitation to signup is called.
+
+    after_invitation do |object, options|
+        #user code
+    end
+    after_invitation :some_method_5_to_call, :some_method_6_to_call
+
+    #Define callbacks methods like below (in any inherited model from BambooUser::User)
+    def some_method_5_to_call(options)
+        #user code goes in here
+    end
+
+
 == Customizations
 
 It should suffice 90% of a basic rails requirement for user signup, login and other related activities.

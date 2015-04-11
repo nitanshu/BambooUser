@@ -1,5 +1,9 @@
+require 'bamboo_user/callback'
 module BambooUser
   class User < ActiveRecord::Base
+
+    #---Extending callbacks ----------------------------------------
+    extend BambooUser::Callback
 
     #---Constants declarations -------------------------------------
     SHOULD_NOT_BE_A_PASSWORD = 'ishouldnothavebeenthepassword'
@@ -46,17 +50,19 @@ module BambooUser
 
         if user.save
           _out_inference = {user: user, invitation_path: user.invitation_signup_link, message: 'new_user_created'}
+          process_after_invitation_callbacks(user, _out_inference)
           callback_on_success.call(_out_inference)
           return _out_inference
         else
           logger.debug(user.errors.inspect)
-          _out_inference = {user: user, errors: user.errors,  message: 'errors_on_user_creation'}
+          _out_inference = {user: user, errors: user.errors, message: 'errors_on_user_creation'}
           callback_on_failure.call(_out_inference)
           return _out_inference
         end
         return user
       else
         _out_inference = {user: _self, message: 'user_already_exist'}
+        process_after_invitation_callbacks(_self, _out_inference)
         callback_on_invalid.call(_out_inference)
         return _out_inference
       end
