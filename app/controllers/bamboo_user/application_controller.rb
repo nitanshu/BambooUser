@@ -15,7 +15,8 @@ module BambooUser
 
     def default_after_signup(user)
       session[:user] = user.id if BambooUser.auto_login_after_signup
-      session[:previous_url] = nil #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
+      @preserve_previous_url ||= false
+      session[:previous_url] = nil unless @preserve_previous_url #Otherwise it may re-take back to sign_up page wrongly, as its path can't be blacklisted as 'hard-coded' way in engine.rb
       #cookies.permanent[:auth_token_p] = @user.auth_token if params[:remember_me]
     end
 
