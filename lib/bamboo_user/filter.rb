@@ -38,6 +38,25 @@ module BambooUser
       end
     end
 
+    ###### after-signup_failed callbacks ######################################
+    def after_signup_failed(*names, &blk)
+      @@after_signup_failed_callbacks ||= []
+      @@after_signup_failed_callbacks << names
+      @@after_signup_failed_callbacks << blk
+    end
+
+    def process_after_signup_failed_callbacks(controller, object)
+      @@after_signup_failed_callbacks ||= []
+      @@after_signup_failed_callbacks.flatten.compact.each do |callback|
+        _return = if callback.is_a?(Proc)
+                    callback.call(object)
+                  else
+                    controller.send(callback, object)
+                  end
+        return _return if _return == false
+      end
+    end
+
     ###### after-invitation_signup callbacks ###########################################
     def after_invitation(*names, &blk)
       @@after_invitation_callbacks ||= []

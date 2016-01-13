@@ -40,6 +40,8 @@ module BambooUser
           return _return if _return == false
           redirect_to (session[:previous_url] || eval(BambooUser.after_signup_path)) and return
         else
+          _return_failed = self.class.process_after_signup_failed_callbacks(self, @user)
+          return _return_failed if _return_failed == false
           signup_failure_handler and return
         end
       end
