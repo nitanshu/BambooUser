@@ -17,6 +17,10 @@ module BambooUser
           redirect_to eval(BambooUser.after_signup_failed_path), notice: notice
         end
 
+        def login_failure_handler(notice = "Failed to login")
+          redirect_to eval(BambooUser.after_login_failed_path), notice: notice
+        end
+
         def logged_user
           @logged_user ||= BambooUser::User.find_by(auth_token: cookies[:auth_token_p]) if cookies[:auth_token_p]
           @logged_user ||= BambooUser::User.find_by(id: session[:user])

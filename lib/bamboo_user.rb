@@ -102,6 +102,9 @@ module BambooUser
   mattr_accessor :after_signup_failed_path
   @@after_signup_failed_path = 'bamboo_user.sign_up_path'
 
+  mattr_accessor :after_login_failed_path
+  @@after_login_failed_path = 'bamboo_user.login_path'
+
   mattr_accessor :after_invitation_signup_path
   @@after_invitation_signup_path = 'main_app.root_path'
 

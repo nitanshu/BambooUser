@@ -14,9 +14,10 @@ module BambooUser
           cookies.permanent[:auth_token_p] = user.auth_token if params[:remember_me]
 
           return self.class.process_after_login_callbacks(self, user)
+        else
+          login_failure_handler and return
         end
       end
-      render layout: BambooUser.login_screen_layout
     end
 
     def reset_password
