@@ -18,6 +18,7 @@ module BambooUser
           login_failure_handler and return
         end
       end
+      render layout: BambooUser.login_screen_layout
     end
 
     def reset_password
